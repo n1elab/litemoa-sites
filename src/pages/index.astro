@@ -1,11 +1,345 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const serverIP = "liteplay.n1e.net"; 
+
+let isOnline = false;
+let onlinePlayers = 0;
+let maxPlayers = 0;
+
+try {
+  const response = await fetch(`https://api.mcstatus.io/v2/status/java/liteplay.n1e.net`);
+  const data = await response.json();
+  
+  isOnline = data.online;
+  if (isOnline) {
+    onlinePlayers = data.players.online;
+    maxPlayers = data.players.max;
+  }
+} catch (error) {
+  console.error("サーバー情報の取得に失敗しました:", error);
+}
+
+const allNews = await getCollection('news');
+const sortedNews = allNews.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="ホーム">
+  <section class="hero-container">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      
+      <div class="live-status-container">
+        {isOnline ? (
+          <div class="status-pulse-wrapper">
+            <span class="pulse-dot"></span>
+            <span class="status-live-text">ONLINE: <b>{onlinePlayers}</b> / {maxPlayers} PLAYERS</span>
+          </div>
+        ) : (
+          <div class="status-pulse-wrapper offline">
+            <span class="static-dot"></span>
+            <span class="status-live-text">OFFLINE</span>
+          </div>
+        )}
+      </div>
+
+      <h1>Litemoa Server / リテ鯖</h1>
+      <p class="hero-lead">経済中心のクロスプレイ生活マイクラサーバー</p>
+      
+      <div class="status-badge-notice">
+        <span class="status-title">現在開発中</span>
+        <span class="status-date">8月中旬ベータ公開予定</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-section">
+    <h2>サーバーについて</h2>
+    <div class="heading-underline"></div>
+    <p class="about-text">
+      経済要素や便利機能があり、Switchやスマホ、PCなどの様々な端末から参加できる「クロスプレイ」に対応しています。みんなでワイワイ生活しましょう！
+    </p>
+  </section>
+
+  <section class="features-section">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="card-icon">💰</div>
+        <h3>本格的な経済システム</h3>
+        <label>ECONOMY SYSTEM</label>
+        <p>アイテムの売買やプレイヤー間の取引で独自の通貨を稼ぐことができます。自分のお店を開拓し、サーバー随一の大富豪を目指しましょう。</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="card-icon">🌐</div>
+        <h3>シームレスなクロスプレイ</h3>
+        <label>CROSS-PLAY ENVIRONMENT</label>
+        <p>Java版と統合版の壁をなくし、PC・スマホ・タブレット・ゲーム機など、どの端末からでも同じ世界に集まって一緒に生活が可能です。</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="card-icon">🏡</div>
+        <h3>自由で豊かな生活要素</h3>
+        <label>LIFE & COMMUNITY</label>
+        <p>のんびり農業をするもよし、巨大な街を建築するもよし。治安維持を徹底した、誰でも安心して馴染める快適なコミュニティです。</p>
+      </div>
+    </div>
+  </section>
 </Layout>
+
+<style>
+  .hero-container {
+    position: relative;
+    width: 100%;
+    height: 520px;
+    background-image: url('https://'); 
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(18, 18, 18, 0.4) 0%, rgba(18, 18, 18, 0.9) 100%);
+    z-index: 1;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .live-status-container {
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.5rem 1.2rem;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+  }
+  .status-pulse-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #4ade80;
+    border-radius: 50%;
+    animation: pulse 1.6s infinite;
+  }
+  .static-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #4b5563;
+    border-radius: 50%;
+  }
+  .status-live-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #e5e7eb;
+    letter-spacing: 0.1em;
+  }
+  .status-live-text b { color: #4ade80; }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+    70% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+  }
+  .hero-content h1 {
+    font-size: 4rem;
+    font-weight: 800;
+    margin: 0 0 0.4rem 0;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+  }
+  .hero-lead {
+    font-size: 1rem;
+    color: #9ca3af;
+    margin: 0 0 2.5rem 0;
+    letter-spacing: 0.05em;
+  }
+  .status-badge-notice {
+    display: inline-flex;
+    flex-direction: column;
+    background-color: #4ade80;
+    color: #022c22;
+    font-weight: 700;
+    padding: 0.8rem 2.8rem;
+    border-radius: 4px;
+    line-height: 1.4;
+  }
+  .status-title { font-size: 0.8rem; opacity: 0.8; }
+  .status-date { font-size: 1.05rem; }
+
+  .about-section {
+    max-width: 720px;
+    margin: 6rem auto 3rem auto;
+    padding: 0 1.5rem;
+    text-align: center;
+  }
+  .about-section h2 {
+    font-size: 1.8rem;
+    color: #ffffff;
+    margin: 0 0 1rem 0;
+    font-weight: 700;
+  }
+  .heading-underline {
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, #4ade80, #3b82f6);
+    margin: 0 auto 2.5rem auto;
+  }
+  .about-text {
+    font-size: 1rem;
+    color: #9ca3af;
+    line-height: 1.9;
+  }
+
+  .features-section {
+    max-width: 1100px;
+    margin: 0 auto 6rem auto;
+    padding: 0 2rem;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+  .feature-card {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: transform 0.2s, background-color 0.2s;
+  }
+  .feature-card:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+    transform: translateY(-4px);
+  }
+  .card-icon {
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+  }
+  .feature-card h3 {
+    font-size: 1.25rem;
+    color: #ffffff;
+    margin: 0 0 0.2rem 0;
+    font-weight: 700;
+  }
+  .feature-card label {
+    display: block;
+    font-size: 0.6rem;
+    color: #4b5563;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.2rem;
+  }
+  .feature-card p {
+    font-size: 0.9rem;
+    color: #9ca3af;
+    line-height: 1.7;
+    margin: 0;
+    text-align: left;
+  }
+
+  .news-section {
+    max-width: 900px;
+    margin: 0 auto 8rem auto;
+    padding: 0 2rem;
+  }
+  .news-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 1.2rem;
+    margin-bottom: 2rem;
+  }
+  .title-wrap label {
+    display: block;
+    font-size: 0.65rem;
+    color: #4ade80;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.2rem;
+  }
+  .news-header h2 {
+    font-size: 1.6rem;
+    color: #ffffff;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: 0.05em;
+  }
+  .view-all-link {
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+  .view-all-link:hover { color: #4ade80; }
+  .news-timeline { display: flex; flex-direction: column; }
+  .news-item {
+    display: flex;
+    align-items: center;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    transition: background-color 0.2s;
+  }
+  .news-item:hover { background-color: rgba(255, 255, 255, 0.01); }
+  .news-item time {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #4b5563;
+    width: 100px;
+    flex-shrink: 0;
+  }
+  .news-tag {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+  .badge-maintenance { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
+  .badge-info { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+  .news-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .news-title a {
+    color: #d1d5db;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .news-title a:hover { color: #ffffff; }
+  .news-empty { font-size: 0.9rem; color: #4b5563; text-align: center; padding: 3rem 0; }
+
+  @media (max-width: 768px) {
+    .hero-content h1 { font-size: 2.8rem; }
+    .features-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .news-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .news-item time { width: auto; }
+    .news-tag { margin-right: 0; }
+  }
+</style>

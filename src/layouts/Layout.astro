@@ -1,23 +1,118 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+const { title } = Astro.props;
+---
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title} | Litemoa Server💡リテ鯖 公式サイト</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+      header {
+        background-color: #121212;
+        padding: 1.2rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .logo {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #4caf50;
+        letter-spacing: 0.05em;
+      }
+      nav {
+        display: flex;
+        gap: 20px;
+      }
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      nav a:hover {
+        color: #4caf50;
+      }
+      main {
+        width: 100%;
+      }
+      footer {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #666;
+        font-size: 0.85rem;
+        background-color: #0c0c0c;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">Litemoa Server💡リテ鯖</div>
+      <nav>
+        <a href="https://litemoawiki.n1e.net/rules">RULES</a>
+        <a href="https://litemoawiki.n1e.net/">WIKI</a>
+        <a href="https://litemoamap.n1e.net/">MAP</a>
+        <a href="https://discord.gg/UyKV4BDxBR/">DISCORD</a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <p class="copyright">&copy; 2026 Litemoa Server / &copy; 2026 Litemoa / &copy; 2026 N1E Lab</p>
+        <p class="disclaimer">Not an official Minecraft product. Not approved by or associated with Mojang.</p>
+        
+        <div class="ad-space">
+          <p class="ad-label">- Ad -</p>
+          <!-- admax -->
+            <script is:inline src="https://adm.shinobi.jp/o/3c0f3055576e375f9155694a93a52057"></script>
+          <!-- admax -->
+        </div>
+      </div>
+    </footer>
+
+    <style>
+      footer {
+        text-align: center;
+        padding: 4rem 1rem;
+        background-color: #000000;
+        border-top: 1px solid #1a1a1a;
+      }
+      .copyright {
+        font-size: 0.85rem;
+        color: #666666;
+        margin: 0 0 0.5rem 0;
+      }
+      .disclaimer {
+        font-size: 0.8rem;
+        color: #444444;
+        margin: 0 0 2rem 0;
+      }
+      .ad-label {
+        font-size: 0.8rem;
+        color: #444444;
+        margin: 0 0 8rem 0;
+      }
+      .ad-note {
+        font-size: 0.8rem;
+        color: #333333;
+        margin: 0;
+      }
+    </style>
+
+  </body>
+</html>

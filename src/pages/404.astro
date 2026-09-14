@@ -1,0 +1,90 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="404 Not Found">
+  <div class="error-container">
+    <div class="error-code">404</div>
+    <h1>ページが見つかりません</h1>
+    <div class="heading-underline"></div>
+    
+    <p class="error-message">
+      お探しのページは削除されたか、URLが間違っている可能性があります。
+    </p>
+
+    <a href="/" class="home-btn">ホームへ戻る</a>
+  </div>
+</Layout>
+
+<style>
+  .error-container {
+    max-width: 600px;
+    margin: 7rem auto;
+    padding: 0 1.5rem;
+    text-align: center;
+  }
+
+  /* 大きなエラー数字 */
+  .error-code {
+    font-size: 6rem;
+    font-weight: 800;
+    color: #1f2937; /* 目立ちすぎない暗めのグレー */
+    line-height: 1;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .error-container h1 {
+    font-size: 2rem;
+    color: #ffffff;
+    margin: 0 0 0.8rem 0;
+    font-weight: bold;
+  }
+
+  /* トップページと同じスタイルのグラデーション下線 */
+  .heading-underline {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #4ade80, #3b82f6);
+    margin: 0 auto 2rem auto;
+  }
+
+  .error-message {
+    font-size: 1rem;
+    color: #9ca3af;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+  }
+
+  /* 🟢 ホームへ戻るボタン（サイトになじむクリーンなデザイン） */
+  .home-btn {
+    display: inline-block;
+    background-color: transparent;
+    color: #4ade80;
+    border: 2px solid #4ade80;
+    font-weight: bold;
+    padding: 0.8rem 2.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    transition: background-color 0.2s, color 0.2s, transform 0.1s;
+  }
+
+  .home-btn:hover {
+    background-color: #4ade80;
+    color: #052e16; /* ホバー時は文字を濃い緑に */
+  }
+
+  .home-btn:active {
+    transform: scale(0.98);
+  }
+
+  /* スマホ対応 */
+  @media (max-width: 768px) {
+    .error-container { margin: 5rem auto; }
+    .error-code { font-size: 4.5rem; }
+    .error-container h1 { font-size: 1.6rem; }
+    .error-message { font-size: 0.9rem; }
+  }
+</style>
