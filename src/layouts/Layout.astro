@@ -73,8 +73,22 @@ const { title } = Astro.props;
 
     <footer>
       <div class="footer-content">
-        <p class="copyright">&copy; 2026 Litemoa Server / &copy; 2026 Litemoa / &copy; 2026 N1E Lab</p>
+
+        <div class="footer-links">
+          <a href="https://litemoa.n1e.net" target="_blank" rel="noopener noreferrer">公式サイト</a>
+          <span class="divider"> | </span>
+          <a href="https://litemoawiki.n1e.net" target="_blank" rel="noopener noreferrer">ウィキ</a>
+          <span class="divider"> | </span>
+          <a href="https://litemoamap.n1e.net" target="_blank" rel="noopener noreferrer">ウェブマップ</a>
+          <span class="divider"> | </span>
+          <a href="https://litemoawiki.n1e.net/rules" target="_blank" rel="noopener noreferrer">利用規約</a>
+          <span class="divider"> | </span>
+          <a href="https://litemoawiki.n1e.net/policy" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>
+        </div>
+
         <p class="disclaimer">Not an official Minecraft product. Not approved by or associated with Mojang.</p>
+        <p class="copyright">&copy; 2026 Litemoa Server / &copy; 2026 Litemoa / &copy; 2026 N1E Lab</p>
+        
         
         <div class="ad-space">
           <p class="ad-label">- Ad -</p>
@@ -92,6 +106,28 @@ const { title } = Astro.props;
         background-color: #000000;
         border-top: 1px solid #1a1a1a;
       }
+
+      /* リンクエリア */
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem 0.8rem;
+        margin-bottom: 1rem;
+      }
+
+      .footer-links a {
+       color: var(--sl-color-gray-2);
+       text-decoration: none;
+      transition: color 0.2s ease;
+      }
+
+      .footer-links a:hover {
+        color: var(--sl-color-text-accent);
+        text-decoration: underline;
+     }
+
       .copyright {
         font-size: 0.85rem;
         color: #666666;
