@@ -1,347 +1,263 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import SocialEmbeds from '../components/SocialEmbeds.astro';
 import { getCollection } from 'astro:content';
 
-const serverIP = "liteplay.n1e.net"; 
+const news = (await getCollection('news'))
+  .filter((entry) => !entry.data.draft)
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+  .slice(0, 3);
 
-let isOnline = false;
-let onlinePlayers = 0;
-let maxPlayers = 0;
-
-try {
-  const response = await fetch(`https://api.mcstatus.io/v2/status/java/liteplay.n1e.net`);
-  const data = await response.json();
-  
-  isOnline = data.online;
-  if (isOnline) {
-    onlinePlayers = data.players.online;
-    maxPlayers = data.players.max;
-  }
-} catch (error) {
-  console.error("サーバー情報の取得に失敗しました:", error);
-}
-
-const allNews = await getCollection('news');
-const sortedNews = allNews.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+const formatDate = (date: Date) =>
+  new Intl.DateTimeFormat('ja-JP', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date);
 ---
 
-<Layout title="ホーム">
-  <section class="hero-container">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      
-      <div class="live-status-container">
-        {isOnline ? (
-          <div class="status-pulse-wrapper">
-            <span class="pulse-dot"></span>
-            <span class="status-live-text">ONLINE: <b>{onlinePlayers}</b> / {maxPlayers} PLAYERS</span>
-          </div>
-        ) : (
-          <div class="status-pulse-wrapper offline">
-            <span class="static-dot"></span>
-            <span class="status-live-text">OFFLINE</span>
-          </div>
-        )}
+<SiteLayout>
+  <section class="hero">
+    <div class="hero-grid"></div>
+
+    <div class="shell hero-inner">
+      <img
+        class="hero-server-icon"
+        src="/server-icon.png"
+        alt="Litemoa Server アイコン"
+        width="96"
+        height="96"
+      />
+
+      <div class="server-status" data-server-status aria-live="polite">
+        <span class="status-dot"></span>
+        <span data-status-text>サーバー情報を取得中…</span>
       </div>
 
-      <h1>Litemoa Server / リテ鯖</h1>
-      <p class="hero-lead">経済中心のクロスプレイ生活マイクラサーバー</p>
-      
-      <a href="https://litemoawiki.n1e.net/join/">
-        <div class="status-badge-notice">
-          <span class="status-title">現在開発中</span>
-          <span class="status-date">8月中旬ベータ公開予定</span>
-        </div>
-      </a>
+      <p class="eyebrow">LITEMOA SERVER / CROSS-PLAY LIFE ECONOMY</p>
+      <p class="hero-concept">もう一つの日常を、マイクラの世界で。</p>
+      <h1>Litemoa Server<span>リテ鯖</span></h1>
+      <p class="hero-lead">
+        Minecraft本来のサバイバルを楽しみながら、お店を開いたり、街を作ったり、
+        鯖民同士で雑談したり。Java版・統合版から一緒に遊べる生活経済サーバーです。
+      </p>
+
+      <div class="hero-actions">
+        <a class="primary-button" href="/wiki/join/">参加方法を見る</a>
+
+        <button
+          class="secondary-button"
+          type="button"
+          data-copy-ip
+          data-ip="liteplay.n1e.net"
+        >
+          <span>liteplay.n1e.net</span>
+          <strong data-copy-label>IPをコピー</strong>
+        </button>
+      </div>
+
+      <p class="hero-note">Java版 / 統合版対応 · PC / スマホ / タブレット / ゲーム機</p>
     </div>
   </section>
 
-  <section class="about-section">
-    <h2>サーバーについて</h2>
-    <div class="heading-underline"></div>
-    <p class="about-text">
-      経済要素や便利機能を導入してSwitchやスマホ、PCなどの様々な端末から参加できる「クロスプレイ」に対応しています。みんなでワイワイ生活ができるサーバーです。<br>農業や人口資源でちまちま稼ぐのもよし！一攫千金を目指して大冒険もよし！<br>商人になって売買で稼ぐのも良し！<br>いろいろな遊び方ができます。
-    </p>
-  </section>
-
-  <section class="features-section">
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="card-icon">💰</div>
-        <h3>経済要素</h3>
-        <label>ECONOMY SYSTEM</label>
-        <p>アイテムの売買やプレイヤー間の取引で独自の通貨を稼ぐことができます。自分のお店を開拓し、サーバー随一の大富豪を目指しましょう。</p>
+  <section class="section" id="about">
+    <div class="shell section-heading">
+      <div>
+        <p class="section-label">ABOUT</p>
+        <h2>ログインしたら、<br />いつもの誰かがいる。</h2>
       </div>
 
-      <div class="feature-card">
-        <div class="card-icon">🎮️</div>
+      <p>
+        Litemoaが目指しているのは、効率だけを追いかける場所ではなく、
+        サバイバルを土台にそれぞれの暮らしや関係が少しずつ育っていく世界です。
+        一人でのんびり遊ぶ日も、誰かと話しながら遊ぶ日も歓迎です。
+      </p>
+    </div>
+
+    <div class="shell about-panel">
+      <p>
+        建築や冒険を楽しんだり、商店街に自分のお店を作ったり、
+        プレイヤー同士でアイテムを売買したり、Discordで雑談したり。
+        運営が用意した遊び方をなぞるだけではなく、鯖民それぞれの活動が
+        サーバーの景色や経済を作っていく。そんな「もう一つの日常」を目指しています。
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="shell section-heading compact">
+      <div>
+        <p class="section-label">FEATURES</p>
+        <h2>リテ鯖でできること。</h2>
+      </div>
+    </div>
+
+    <div class="shell feature-grid">
+      <article class="feature-card">
+        <span class="feature-number">01</span>
+        <div class="feature-symbol" aria-hidden="true">⛏</div>
+        <h3>サバイバルが土台</h3>
+        <p>Minecraft本来の資源集め、冒険、建築を大切に。便利さを足しても、サバイバルそのものの面白さは残します。</p>
+      </article>
+
+      <article class="feature-card">
+        <span class="feature-number">02</span>
+        <div class="feature-symbol" aria-hidden="true">¥</div>
+        <h3>鯖民がつくる経済</h3>
+        <p>経済の中心はプレイヤー同士の売買。自分のお店や取引を通して、サーバーの経済に参加できます。</p>
+      </article>
+
+      <article class="feature-card">
+        <span class="feature-number">03</span>
+        <div class="feature-symbol" aria-hidden="true">店</div>
+        <h3>自由なお店づくり</h3>
+        <p>商店街でチェストショップを開いたり、ゲーム内の仕組みを使った遊びやサービスを考えたり。アイデアを形にできます。</p>
+      </article>
+
+      <article class="feature-card">
+        <span class="feature-number">04</span>
+        <div class="feature-symbol" aria-hidden="true">↔</div>
         <h3>クロスプレイ</h3>
-        <label>CROSS-PLAY ENVIRONMENT</label>
-        <p>Java版と統合版の壁をなくし、PC・スマホ・タブレット・ゲーム機など、どの端末からでも同じ世界に集まって一緒に生活が可能です。</p>
+        <p>Java版と統合版のプレイヤーが、同じ世界で一緒に遊べる環境を目指しています。</p>
+      </article>
+
+      <article class="feature-card">
+        <span class="feature-number">05</span>
+        <div class="feature-symbol" aria-hidden="true">◎</div>
+        <h3>運営も同じ世界に</h3>
+        <p>運営も鯖民と近い距離でサバイバルを楽しみながら、みんなと一緒に世界を育てていく方針です。</p>
+      </article>
+
+      <article class="feature-card">
+        <span class="feature-number">06</span>
+        <div class="feature-symbol" aria-hidden="true">#</div>
+        <h3>まったりコミュニティ</h3>
+        <p>建築を見せ合ったり、Discordで雑談したり。毎日来ても、久しぶりに帰ってきても居やすい場所を目指します。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section news-home" id="news">
+    <div class="shell section-heading">
+      <div>
+        <p class="section-label">NEWS</p>
+        <h2>リテ鯖からのお知らせ。</h2>
       </div>
 
-      <div class="feature-card">
-        <div class="card-icon">🏡</div>
-        <h3>生活とコミュニティ</h3>
-        <label>LIFE & COMMUNITY</label>
-        <p>のんびり農業をするもよし、巨大な街を建築するもよし。Discordとマイクラの連携で楽しく会話することもできます。</p>
+      <p>
+        サイト更新、メンテナンス、イベントなどの情報を掲載します。
+      </p>
+    </div>
+
+    <div class="shell news-list">
+      {news.length > 0 ? (
+        news.map((item) => (
+          <a class="news-row" href={`/news/${item.id}/`}>
+            <time datetime={item.data.publishedAt.toISOString()}>
+              {formatDate(item.data.publishedAt)}
+            </time>
+            <span class="news-category">{item.data.category}</span>
+            <strong>{item.data.title}</strong>
+            <span class="news-arrow" aria-hidden="true">→</span>
+          </a>
+        ))
+      ) : (
+        <div class="news-empty">現在公開中のお知らせはありません。</div>
+      )}
+    </div>
+
+    <div class="shell news-more">
+      <a href="/news/">NEWS一覧を見る →</a>
+    </div>
+  </section>
+
+  <section class="wiki-promo">
+    <div class="shell wiki-promo-inner">
+      <div>
+        <p class="section-label">OFFICIAL WIKI</p>
+        <h2>公式wiki</h2>
+        <p>
+          参加方法、ワールドの情報、コマンドの使用方法などを Wiki にまとめています。
+        </p>
+      </div>
+
+      <div class="wiki-links">
+        <a href="/wiki/">Wikiトップ <span>→</span></a>
+        <a href="/wiki/join/">参加方法 <span>→</span></a>
+        <a href="/wiki/rules/">利用規約 <span>→</span></a>
       </div>
     </div>
   </section>
-</Layout>
 
-<style>
-  .hero-container {
-    position: relative;
-    width: 100%;
-    height: 520px;
-    background-image: url('https://'); 
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-  .hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(180deg, rgba(18, 18, 18, 0.4) 0%, rgba(18, 18, 18, 0.9) 100%);
-    z-index: 1;
-  }
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .live-status-container {
-    background-color: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0.5rem 1.2rem;
-    border-radius: 100px;
-    margin-bottom: 2rem;
-  }
-  .status-pulse-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .pulse-dot {
-    width: 8px;
-    height: 8px;
-    background-color: #4ade80;
-    border-radius: 50%;
-    animation: pulse 1.6s infinite;
-  }
-  .static-dot {
-    width: 8px;
-    height: 8px;
-    background-color: #4b5563;
-    border-radius: 50%;
-  }
-  .status-live-text {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #e5e7eb;
-    letter-spacing: 0.1em;
-  }
-  .status-live-text b { color: #4ade80; }
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
-    70% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
-  }
-  .hero-content h1 {
-    font-size: 4rem;
-    font-weight: 800;
-    margin: 0 0 0.4rem 0;
-    color: #ffffff;
-    letter-spacing: -0.02em;
-  }
-  .hero-lead {
-    font-size: 1rem;
-    color: #9ca3af;
-    margin: 0 0 2.5rem 0;
-    letter-spacing: 0.05em;
-  }
-  .status-badge-notice {
-    display: inline-flex;
-    flex-direction: column;
-    background-color: #4ade80;
-    color: #022c22;
-    font-weight: 700;
-    padding: 0.8rem 2.8rem;
-    border-radius: 4px;
-    line-height: 1.4;
-  }
-  .status-title { font-size: 0.8rem; opacity: 0.8; }
-  .status-date { font-size: 1.05rem; }
+  <SocialEmbeds />
 
-  .about-section {
-    max-width: 720px;
-    margin: 6rem auto 3rem auto;
-    padding: 0 1.5rem;
-    text-align: center;
-  }
-  .about-section h2 {
-    font-size: 1.8rem;
-    color: #ffffff;
-    margin: 0 0 1rem 0;
-    font-weight: 700;
-  }
-  .heading-underline {
-    width: 40px;
-    height: 2px;
-    background: linear-gradient(90deg, #4ade80, #3b82f6);
-    margin: 0 auto 2.5rem auto;
-  }
-  .about-text {
-    font-size: 1rem;
-    color: #9ca3af;
-    line-height: 1.9;
-  }
+  <section class="join-cta">
+    <div class="shell join-cta-inner">
+      <p class="section-label">READY?</p>
+      <h2>もう一つの日常へ。</h2>
+      <p>まずはWikiで参加方法と利用規約を確認して、気軽に遊びに来てください。</p>
 
-  .features-section {
-    max-width: 1100px;
-    margin: 0 auto 6rem auto;
-    padding: 0 2rem;
-  }
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-  }
-  .feature-card {
-    background: rgba(255, 255, 255, 0.01);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    border-radius: 8px;
-    padding: 2.5rem 2rem;
-    text-align: center;
-    transition: transform 0.2s, background-color 0.2s;
-  }
-  .feature-card:hover {
-    background-color: rgba(255, 255, 255, 0.03);
-    transform: translateY(-4px);
-  }
-  .card-icon {
-    font-size: 2.2rem;
-    margin-bottom: 1rem;
-  }
-  .feature-card h3 {
-    font-size: 1.25rem;
-    color: #ffffff;
-    margin: 0 0 0.2rem 0;
-    font-weight: 700;
-  }
-  .feature-card label {
-    display: block;
-    font-size: 0.6rem;
-    color: #4b5563;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    margin-bottom: 1.2rem;
-  }
-  .feature-card p {
-    font-size: 0.9rem;
-    color: #9ca3af;
-    line-height: 1.7;
-    margin: 0;
-    text-align: left;
-  }
+      <div class="hero-actions center">
+        <a class="primary-button" href="/wiki/join/">参加方法を見る</a>
+        <a
+          class="secondary-link"
+          href="https://discord.gg/UyKV4BDxBR"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Discordに参加 ↗</a>
+      </div>
+    </div>
+  </section>
 
-  .news-section {
-    max-width: 900px;
-    margin: 0 auto 8rem auto;
-    padding: 0 2rem;
-  }
-  .news-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding-bottom: 1.2rem;
-    margin-bottom: 2rem;
-  }
-  .title-wrap label {
-    display: block;
-    font-size: 0.65rem;
-    color: #4ade80;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    margin-bottom: 0.2rem;
-  }
-  .news-header h2 {
-    font-size: 1.6rem;
-    color: #ffffff;
-    font-weight: 800;
-    margin: 0;
-    letter-spacing: 0.05em;
-  }
-  .view-all-link {
-    font-size: 0.8rem;
-    color: #6b7280;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s;
-  }
-  .view-all-link:hover { color: #4ade80; }
-  .news-timeline { display: flex; flex-direction: column; }
-  .news-item {
-    display: flex;
-    align-items: center;
-    padding: 1.2rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    transition: background-color 0.2s;
-  }
-  .news-item:hover { background-color: rgba(255, 255, 255, 0.01); }
-  .news-item time {
-    font-family: monospace;
-    font-size: 0.85rem;
-    color: #4b5563;
-    width: 100px;
-    flex-shrink: 0;
-  }
-  .news-tag {
-    font-size: 0.65rem;
-    font-weight: 700;
-    padding: 0.25rem 0.6rem;
-    border-radius: 4px;
-    margin-right: 1.5rem;
-    flex-shrink: 0;
-    letter-spacing: 0.05em;
-  }
-  .badge-maintenance { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
-  .badge-info { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-  .news-title {
-    font-size: 0.95rem;
-    font-weight: 500;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .news-title a {
-    color: #d1d5db;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .news-title a:hover { color: #ffffff; }
-  .news-empty { font-size: 0.9rem; color: #4b5563; text-align: center; padding: 3rem 0; }
+  <script>
+    const statusRoot = document.querySelector('[data-server-status]');
+    const statusText = document.querySelector('[data-status-text]');
 
-  @media (max-width: 768px) {
-    .hero-content h1 { font-size: 2.8rem; }
-    .features-grid { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 640px) {
-    .news-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-    .news-item time { width: auto; }
-    .news-tag { margin-right: 0; }
-  }
-</style>
+    async function updateServerStatus() {
+      try {
+        const response = await fetch('https://api.mcstatus.io/v2/status/java/liteplay.n1e.net');
+        if (!response.ok) throw new Error('status api error');
+
+        const data = await response.json();
+
+        if (data.online) {
+          statusRoot?.classList.add('online');
+
+          if (statusText) {
+            statusText.textContent =
+              `ONLINE · ${data.players.online} / ${data.players.max} PLAYERS`;
+          }
+        } else if (statusText) {
+          statusText.textContent = 'OFFLINE';
+        }
+      } catch {
+        if (statusText) {
+          statusText.textContent = 'STATUS UNAVAILABLE';
+        }
+      }
+    }
+
+    updateServerStatus();
+
+    document.querySelector('[data-copy-ip]')?.addEventListener('click', async (event) => {
+      const button = event.currentTarget;
+
+      if (!(button instanceof HTMLElement)) return;
+
+      const ip = button.dataset.ip || 'liteplay.n1e.net';
+      const label = button.querySelector('[data-copy-label]');
+
+      try {
+        await navigator.clipboard.writeText(ip);
+
+        if (label) label.textContent = 'コピーしました';
+
+        window.setTimeout(() => {
+          if (label) label.textContent = 'IPをコピー';
+        }, 1600);
+      } catch {
+        if (label) label.textContent = ip;
+      }
+    });
+  </script>
+</SiteLayout>

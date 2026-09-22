@@ -1,0 +1,53 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const news = (await getCollection('news')).filter((entry) => !entry.data.draft);
+
+  return news.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const formatDate = (date: Date) =>
+  new Intl.DateTimeFormat('ja-JP', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date);
+---
+
+<SiteLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogType="article"
+  publishedAt={post.data.publishedAt}
+  updatedAt={post.data.updatedAt}
+>
+  <article class="news-article">
+    <div class="shell news-article-shell">
+      <a class="news-back" href="/news/">← NEWS一覧へ</a>
+
+      <header class="news-article-head">
+        <div class="news-article-meta">
+          <time datetime={post.data.publishedAt.toISOString()}>
+            {formatDate(post.data.publishedAt)}
+          </time>
+          <span class="news-category">{post.data.category}</span>
+        </div>
+
+        <h1>{post.data.title}</h1>
+        <p>{post.data.description}</p>
+      </header>
+
+      <div class="news-content">
+        <Content />
+      </div>
+    </div>
+  </article>
+</SiteLayout>

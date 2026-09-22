@@ -1,0 +1,47 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { getCollection } from 'astro:content';
+
+const news = (await getCollection('news'))
+  .filter((entry) => !entry.data.draft)
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+const formatDate = (date: Date) =>
+  new Intl.DateTimeFormat('ja-JP', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date);
+---
+
+<SiteLayout
+  title="NEWS"
+  description="Litemoa Server（リテ鯖）の公式NEWS。サイト更新、メンテナンス、イベントなどのお知らせを掲載します。"
+>
+  <section class="news-page">
+    <div class="shell">
+      <header class="page-heading">
+        <p class="section-label">NEWS</p>
+        <h1>お知らせ</h1>
+        <p>Litemoa Serverからのお知らせを掲載しています。</p>
+      </header>
+
+      <div class="news-list news-list-page">
+        {news.length > 0 ? (
+          news.map((item) => (
+            <a class="news-row" href={`/news/${item.id}/`}>
+              <time datetime={item.data.publishedAt.toISOString()}>
+                {formatDate(item.data.publishedAt)}
+              </time>
+              <span class="news-category">{item.data.category}</span>
+              <strong>{item.data.title}</strong>
+              <span class="news-arrow" aria-hidden="true">→</span>
+            </a>
+          ))
+        ) : (
+          <div class="news-empty">現在公開中のお知らせはありません。</div>
+        )}
+      </div>
+    </div>
+  </section>
+</SiteLayout>

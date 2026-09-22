@@ -1,0 +1,390 @@
+:root {
+  --sl-color-accent-low: #dff3e5;
+  --sl-color-accent: #16834a;
+  --sl-color-accent-high: #0c4c2a;
+
+  --sl-color-white: #152119;
+  --sl-color-gray-1: #27342b;
+  --sl-color-gray-2: #48574d;
+  --sl-color-gray-3: #68776d;
+  --sl-color-gray-4: #9aa69f;
+  --sl-color-gray-5: #dce3df;
+  --sl-color-gray-6: #edf1ef;
+  --sl-color-gray-7: #f7f8f7;
+  --sl-color-black: #ffffff;
+
+  --sl-content-width: 58rem;
+  --sl-sidebar-width: 17rem;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    Meiryo,
+    system-ui,
+    sans-serif;
+}
+
+:root[data-theme='dark'] {
+  --sl-color-accent-low: #123a24;
+  --sl-color-accent: #58d885;
+  --sl-color-accent-high: #d9ffe5;
+
+  --sl-color-white: #f5faf6;
+  --sl-color-gray-1: #dbe7df;
+  --sl-color-gray-2: #b6c6bb;
+  --sl-color-gray-3: #85968b;
+  --sl-color-gray-4: #57685e;
+  --sl-color-gray-5: #314139;
+  --sl-color-gray-6: #192820;
+  --sl-color-gray-7: #0f1913;
+  --sl-color-black: #07100c;
+}
+
+/* ---------------------------------------------------------
+   日本のゲームWikiを意識した「情報を探す」ための見た目
+   --------------------------------------------------------- */
+header.header {
+  border-bottom: 3px solid var(--sl-color-accent);
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+
+.site-title {
+  font-weight: 900;
+}
+
+.sidebar-pane {
+  border-right: 1px solid var(--sl-color-hairline);
+}
+
+.sidebar-content {
+  padding-top: .8rem;
+}
+
+.sidebar-content summary,
+.sidebar-content .large {
+  font-weight: 800;
+}
+
+.sidebar-content a[aria-current='page'] {
+  border-left: 4px solid var(--sl-color-accent);
+  border-radius: .3rem;
+  background: var(--sl-color-accent-low);
+  font-weight: 800;
+}
+
+.content-panel {
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--sl-color-accent) 2%, transparent),
+      transparent 16rem
+    );
+}
+
+.sl-markdown-content {
+  font-size: .98rem;
+  line-height: 1.8;
+}
+
+.sl-markdown-content h1 {
+  padding-bottom: .65rem;
+  border-bottom: 3px solid var(--sl-color-accent);
+  letter-spacing: -.03em;
+}
+
+.sl-markdown-content h2 {
+  margin-top: 2.2rem;
+  padding: .55rem .75rem;
+  border-left: 6px solid var(--sl-color-accent);
+  border-bottom: 1px solid var(--sl-color-hairline);
+  border-radius: .15rem;
+  background: var(--sl-color-gray-6);
+  font-size: 1.45rem;
+}
+
+.sl-markdown-content h3 {
+  padding-bottom: .35rem;
+  border-bottom: 1px dashed var(--sl-color-hairline);
+}
+
+.sl-markdown-content table {
+  display: table;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: .45rem;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.sl-markdown-content th {
+  background: var(--sl-color-accent-low);
+  font-weight: 800;
+}
+
+.sl-markdown-content th,
+.sl-markdown-content td {
+  padding: .7rem .8rem;
+  border-right: 1px solid var(--sl-color-hairline);
+  border-bottom: 1px solid var(--sl-color-hairline);
+}
+
+.sl-markdown-content tr:last-child td {
+  border-bottom: 0;
+}
+
+.sl-markdown-content th:last-child,
+.sl-markdown-content td:last-child {
+  border-right: 0;
+}
+
+.sl-markdown-content code {
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: .3rem;
+}
+
+starlight-toc nav {
+  border-left: 1px solid var(--sl-color-hairline);
+}
+
+/* ---------------------------------------------------------
+   Wikiトップ専用ポータル
+   --------------------------------------------------------- */
+.game-wiki-portal {
+  margin-top: .4rem;
+}
+
+.wiki-welcome-box {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 1.15rem;
+  border: 1px solid var(--sl-color-hairline);
+  border-top: 5px solid var(--sl-color-accent);
+  border-radius: .55rem;
+  background: var(--sl-color-bg-nav);
+  box-shadow: 0 4px 14px rgba(0,0,0,.05);
+}
+
+.wiki-welcome-icon img {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  image-rendering: pixelated;
+}
+
+.wiki-mini-label {
+  margin: 0 0 .25rem !important;
+  color: var(--sl-color-text-accent);
+  font-size: .7rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.wiki-welcome-box h2 {
+  margin: 0 0 .3rem !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  font-size: 1.45rem !important;
+}
+
+.wiki-welcome-box p:last-child {
+  margin: 0;
+  color: var(--sl-color-gray-2);
+}
+
+.wiki-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .7rem;
+  margin-top: 1rem;
+}
+
+.wiki-quick-card {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: .7rem;
+  padding: .9rem;
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: .5rem;
+  color: var(--sl-color-text);
+  background: var(--sl-color-bg-nav);
+  text-decoration: none !important;
+  transition: border-color .15s ease, transform .15s ease;
+}
+
+.wiki-quick-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--sl-color-accent);
+}
+
+.wiki-quick-icon {
+  grid-row: 1 / 3;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: .4rem;
+  color: #fff;
+  background: var(--sl-color-accent);
+  font-weight: 900;
+}
+
+.wiki-quick-card strong {
+  align-self: end;
+  font-size: .95rem;
+}
+
+.wiki-quick-card small {
+  color: var(--sl-color-gray-3);
+  font-size: .72rem;
+}
+
+.wiki-two-column {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .8rem;
+  margin-top: 1rem;
+}
+
+.wiki-info-box {
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: .5rem;
+  background: var(--sl-color-bg-nav);
+  overflow: hidden;
+}
+
+.wiki-info-box > h2 {
+  margin: 0 !important;
+  padding: .65rem .8rem !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--sl-color-hairline) !important;
+  background: var(--sl-color-accent-low) !important;
+  font-size: 1rem !important;
+}
+
+.wiki-link-list {
+  margin: 0 !important;
+  padding: .45rem .8rem .55rem 2rem !important;
+}
+
+.wiki-link-list li {
+  padding: .28rem 0;
+}
+
+.wiki-server-data {
+  margin: 0;
+}
+
+.wiki-server-data > div {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: .6rem;
+  padding: .65rem .8rem;
+  border-bottom: 1px solid var(--sl-color-hairline);
+}
+
+.wiki-server-data > div:last-child {
+  border-bottom: 0;
+}
+
+.wiki-server-data dt {
+  color: var(--sl-color-gray-3);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.wiki-server-data dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.wiki-help-note {
+  margin-top: 1rem;
+  padding: .8rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--sl-color-accent) 35%, var(--sl-color-hairline));
+  border-radius: .45rem;
+  background: var(--sl-color-accent-low);
+}
+
+.wiki-help-note strong {
+  display: block;
+  margin-bottom: .15rem;
+  color: var(--sl-color-accent-high);
+}
+
+.wiki-help-note p {
+  margin: 0;
+  color: var(--sl-color-gray-2);
+  font-size: .86rem;
+}
+
+/* ---------------------------------------------------------
+   Footer
+   --------------------------------------------------------- */
+.litemoa-wiki-footer {
+  margin-top: 3rem;
+  padding: 2rem 1rem;
+  border-top: 3px solid var(--sl-color-accent);
+  text-align: center;
+  color: var(--sl-color-gray-3);
+  background: var(--sl-color-gray-6);
+  font-size: .78rem;
+}
+
+.litemoa-wiki-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .6rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.litemoa-wiki-footer a {
+  color: var(--sl-color-gray-2);
+}
+
+.litemoa-wiki-footer a:hover {
+  color: var(--sl-color-text-accent);
+}
+
+.litemoa-wiki-footer p {
+  margin: .35rem 0;
+}
+
+/* ---------------------------------------------------------
+   Mobile
+   --------------------------------------------------------- */
+@media (max-width: 640px) {
+  .sl-markdown-content table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .wiki-welcome-box {
+    grid-template-columns: 60px minmax(0, 1fr);
+    padding: .85rem;
+  }
+
+  .wiki-welcome-icon img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .wiki-quick-grid,
+  .wiki-two-column {
+    grid-template-columns: 1fr;
+  }
+
+  .wiki-server-data > div {
+    grid-template-columns: 1fr;
+    gap: .15rem;
+  }
+}

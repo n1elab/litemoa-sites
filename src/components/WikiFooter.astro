@@ -1,0 +1,22 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import Default from '@astrojs/starlight/components/Footer.astro';
+import AdSlot from './AdSlot.astro';
+---
+
+<Default {...Astro.props} />
+
+<footer class="litemoa-wiki-footer">
+  <nav aria-label="Wikiフッターリンク">
+    <a href="/">公式サイト</a>
+    <a href="/wiki/">Wikiトップ</a>
+    <a href="/wiki/join/">参加方法</a>
+    <a href="/wiki/rules/">利用規約</a>
+    <a href="/wiki/policy/">プライバシーポリシー</a>
+    <a href="https://litemoamap.n1e.net/" target="_blank" rel="noopener noreferrer">ウェブマップ ↗</a>
+  </nav>
+
+  <p>Not an official Minecraft product. Not approved by or associated with Mojang.</p>
+  <p>© 2026 Litemoa Server / Litemoa / N1E Lab</p>
+  <div class="wiki-ad"><AdSlot /></div>
+</footer>

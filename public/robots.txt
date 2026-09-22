@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://litemoa.n1e.net/sitemap-index.xml

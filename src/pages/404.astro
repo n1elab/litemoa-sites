@@ -1,90 +1,70 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
 ---
 
-<Layout title="404 Not Found">
-  <div class="error-container">
-    <div class="error-code">404</div>
-    <h1>ページが見つかりません</h1>
-    <div class="heading-underline"></div>
-    
-    <p class="error-message">
-      お探しのページは削除されたか、URLが間違っている可能性があります。
-    </p>
+<SiteLayout
+  title="404 Not Found"
+  description="ページが見つかりませんでした。公式サイトまたはWikiから目的の情報を探せます。"
+>
+  <section class="error-page">
+    <div class="shell error-inner">
+      <img
+        class="error-icon"
+        src="/server-icon.png"
+        alt=""
+        width="84"
+        height="84"
+        aria-hidden="true"
+      />
 
-    <a href="/" class="home-btn">ホームへ戻る</a>
-  </div>
-</Layout>
+      <span>404 / NOT FOUND</span>
+      <h1 data-error-title>ページが見つかりません</h1>
 
-<style>
-  .error-container {
-    max-width: 600px;
-    margin: 7rem auto;
-    padding: 0 1.5rem;
-    text-align: center;
-  }
+      <p data-error-message>
+        URLが変更されたか、ページが削除された可能性があります。
+      </p>
 
-  /* 大きなエラー数字 */
-  .error-code {
-    font-size: 6rem;
-    font-weight: 800;
-    color: #1f2937; /* 目立ちすぎない暗めのグレー */
-    line-height: 1;
-    margin-bottom: 1rem;
-    letter-spacing: 0.05em;
-  }
+      <div class="error-choice-grid">
+        <a class="error-choice official-choice" href="/">
+          <small>OFFICIAL SITE</small>
+          <strong>公式サイトへ</strong>
+          <span>サーバー情報・NEWS・Discordを見る →</span>
+        </a>
 
-  .error-container h1 {
-    font-size: 2rem;
-    color: #ffffff;
-    margin: 0 0 0.8rem 0;
-    font-weight: bold;
-  }
+        <a class="error-choice wiki-choice" href="/wiki/">
+          <small>OFFICIAL WIKI</small>
+          <strong>Wikiへ</strong>
+          <span>参加方法・ルールを探す →</span>
+        </a>
+      </div>
 
-  /* トップページと同じスタイルのグラデーション下線 */
-  .heading-underline {
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(90deg, #4ade80, #3b82f6);
-    margin: 0 auto 2rem auto;
-  }
+      <div class="error-shortcuts">
+        <a href="/news/">NEWS</a>
+        <a href="/wiki/join/">参加方法</a>
+        <a href="/wiki/rules/">利用規約</a>
+        <a href="https://litemoamap.n1e.net/">ウェブマップ ↗</a>
+      </div>
+    </div>
+  </section>
 
-  .error-message {
-    font-size: 1rem;
-    color: #9ca3af;
-    line-height: 1.6;
-    margin-bottom: 3rem;
-  }
+  <script>
+    const path = window.location.pathname;
+    const title = document.querySelector('[data-error-title]');
+    const message = document.querySelector('[data-error-message]');
+    const wikiCard = document.querySelector('.wiki-choice');
+    const officialCard = document.querySelector('.official-choice');
 
-  /* 🟢 ホームへ戻るボタン（サイトになじむクリーンなデザイン） */
-  .home-btn {
-    display: inline-block;
-    background-color: transparent;
-    color: #4ade80;
-    border: 2px solid #4ade80;
-    font-weight: bold;
-    padding: 0.8rem 2.5rem;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 0.95rem;
-    letter-spacing: 0.05em;
-    transition: background-color 0.2s, color 0.2s, transform 0.1s;
-  }
+    if (path.startsWith('/wiki/')) {
+      document.body.classList.add('error-from-wiki');
+      wikiCard?.classList.add('recommended');
 
-  .home-btn:hover {
-    background-color: #4ade80;
-    color: #052e16; /* ホバー時は文字を濃い緑に */
-  }
-
-  .home-btn:active {
-    transform: scale(0.98);
-  }
-
-  /* スマホ対応 */
-  @media (max-width: 768px) {
-    .error-container { margin: 5rem auto; }
-    .error-code { font-size: 4.5rem; }
-    .error-container h1 { font-size: 1.6rem; }
-    .error-message { font-size: 0.9rem; }
-  }
-</style>
+      if (title) title.textContent = 'Wikiのページが見つかりません';
+      if (message) {
+        message.textContent =
+          'ページ名が変更されたか、Wikiの記事がまだ作成されていない可能性があります。';
+      }
+    } else {
+      officialCard?.classList.add('recommended');
+    }
+  </script>
+</SiteLayout>

@@ -1,0 +1,228 @@
+---
+import '../styles/site.css';
+import AdSlot from '../components/AdSlot.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogType?: 'website' | 'article';
+  publishedAt?: Date;
+  updatedAt?: Date;
+}
+
+const {
+  title = 'Litemoa Server（リテ鯖）',
+  description = 'Minecraft本来のサバイバルを楽しみながら、商売・建築・交流など「もう一つの日常」をのんびり楽しめるクロスプレイ対応の生活経済サーバー「Litemoa Server（リテ鯖）」の公式サイトです。',
+  ogType = 'website',
+  publishedAt,
+  updatedAt,
+} = Astro.props;
+
+const pageTitle = title === 'Litemoa Server（リテ鯖）'
+  ? title
+  : `${title} | Litemoa Server（リテ鯖）`;
+
+const canonical = new URL(Astro.url.pathname, 'https://litemoa.n1e.net').toString();
+---
+<!doctype html>
+<html lang="ja" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script is:inline>
+      (() => {
+        const storageKey = 'litemoa-theme';
+        const saved = localStorage.getItem(storageKey);
+        const preferred = window.matchMedia('(prefers-color-scheme: light)').matches
+          ? 'light'
+          : 'dark';
+        const theme = saved === 'light' || saved === 'dark' ? saved : preferred;
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/server-icon.png" type="image/png" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#07100c" data-theme-color />
+
+    <meta property="og:site_name" content="Litemoa Server" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content="https://litemoa.n1e.net/og-image.png" />
+    <meta property="og:locale" content="ja_JP" />
+
+    {publishedAt && <meta property="article:published_time" content={publishedAt.toISOString()} />}
+    {updatedAt && <meta property="article:modified_time" content={updatedAt.toISOString()} />}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://litemoa.n1e.net/og-image.png" />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': ogType === 'article' ? 'NewsArticle' : 'WebSite',
+      name: pageTitle,
+      headline: ogType === 'article' ? title : undefined,
+      datePublished: publishedAt?.toISOString(),
+      dateModified: updatedAt?.toISOString() ?? publishedAt?.toISOString(),
+      url: canonical,
+      image: 'https://litemoa.n1e.net/og-image.png',
+      description,
+      inLanguage: 'ja',
+      publisher: {
+        '@type': 'Organization',
+        name: 'Litemoa Server',
+        url: 'https://litemoa.n1e.net/',
+      },
+    })}></script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">本文へスキップ</a>
+
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href="/" aria-label="Litemoa Server ホーム">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="/server-icon.png" alt="" width="40" height="40" />
+          </span>
+          <span class="brand-copy">
+            <strong>Litemoa Server</strong>
+            <small>リテ鯖</small>
+          </span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="メインナビゲーション">
+          <a href="/#about">ABOUT</a>
+          <a href="/#features">FEATURES</a>
+          <a href="/news/">NEWS</a>
+          <a href="/wiki/">WIKI</a>
+          <a href="https://litemoamap.n1e.net/" target="_blank" rel="noopener noreferrer">MAP ↗</a>
+          <a class="nav-join" href="/wiki/join/">JOIN</a>
+        </nav>
+
+        <div class="header-actions">
+          <button
+            class="theme-button"
+            type="button"
+            data-theme-toggle
+            aria-label="ライトテーマに切り替える"
+            title="テーマを切り替える"
+          >
+            <span class="theme-icon" data-theme-icon aria-hidden="true">☀</span>
+          </button>
+
+          <button class="menu-button" type="button" data-menu-toggle aria-label="メニューを開く" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+
+      <nav class="shell mobile-nav" data-mobile-nav aria-label="スマホナビゲーション">
+        <a href="/#about">サーバーについて</a>
+        <a href="/#features">特徴</a>
+        <a href="/news/">NEWS</a>
+        <a href="/wiki/">Wiki</a>
+        <a href="/wiki/join/">参加方法</a>
+        <a href="/wiki/rules/">利用規約</a>
+        <a href="https://litemoamap.n1e.net/" target="_blank" rel="noopener noreferrer">ウェブマップ ↗</a>
+        <a href="https://discord.gg/UyKV4BDxBR" target="_blank" rel="noopener noreferrer">Discord ↗</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-brand">Litemoa Server / リテ鯖</div>
+          <p>経済中心のクロスプレイ対応生活Minecraftサーバー。</p>
+        </div>
+
+        <div class="footer-links">
+          <a href="/news/">NEWS</a>
+          <a href="/wiki/">Wiki</a>
+          <a href="/wiki/join/">参加方法</a>
+          <a href="/wiki/rules/">利用規約</a>
+          <a href="/wiki/policy/">プライバシーポリシー</a>
+          <a href="https://litemoamap.n1e.net/" target="_blank" rel="noopener noreferrer">ウェブマップ ↗</a>
+        </div>
+      </div>
+
+      <div class="shell footer-ad"><AdSlot /></div>
+
+      <div class="shell footer-bottom">
+        <p>Not an official Minecraft product. Not approved by or associated with Mojang.</p>
+        <p>© 2026 Litemoa Server / Litemoa / N1E Lab</p>
+      </div>
+    </footer>
+
+    <script>
+      const menuButton = document.querySelector('[data-menu-toggle]');
+      const nav = document.querySelector('[data-mobile-nav]');
+      const themeButton = document.querySelector('[data-theme-toggle]');
+      const themeIcon = document.querySelector('[data-theme-icon]');
+      const themeColor = document.querySelector('[data-theme-color]');
+      const storageKey = 'litemoa-theme';
+
+      function applyTheme(theme) {
+        document.documentElement.dataset.theme = theme;
+
+        if (themeIcon) {
+          themeIcon.textContent = theme === 'dark' ? '☀' : '☾';
+        }
+
+        if (themeButton) {
+          const nextTheme = theme === 'dark' ? 'ライト' : 'ダーク';
+          themeButton.setAttribute('aria-label', `${nextTheme}テーマに切り替える`);
+          themeButton.setAttribute('title', `${nextTheme}テーマに切り替える`);
+        }
+
+        if (themeColor) {
+          themeColor.setAttribute(
+            'content',
+            theme === 'dark' ? '#07100c' : '#f5f8f5'
+          );
+        }
+      }
+
+      applyTheme(document.documentElement.dataset.theme || 'dark');
+
+      themeButton?.addEventListener('click', () => {
+        const current = document.documentElement.dataset.theme || 'dark';
+        const next = current === 'dark' ? 'light' : 'dark';
+
+        localStorage.setItem(storageKey, next);
+        applyTheme(next);
+      });
+
+      menuButton?.addEventListener('click', () => {
+        const open = nav?.classList.toggle('open') ?? false;
+        menuButton.setAttribute('aria-expanded', String(open));
+      });
+
+      nav?.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          nav.classList.remove('open');
+          menuButton?.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 861) {
+          nav?.classList.remove('open');
+          menuButton?.setAttribute('aria-expanded', 'false');
+        }
+      });
+    </script>
+  </body>
+</html>
