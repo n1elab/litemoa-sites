@@ -6,7 +6,7 @@
   --sl-color-white: #152119;
   --sl-color-gray-1: #27342b;
   --sl-color-gray-2: #48574d;
-  --sl-color-gray-3: #68776d;
+  --sl-color-gray-3: #58685e;
   --sl-color-gray-4: #9aa69f;
   --sl-color-gray-5: #dce3df;
   --sl-color-gray-6: #edf1ef;
@@ -16,11 +16,11 @@
   --sl-content-width: 58rem;
   --sl-sidebar-width: 17rem;
 
-  font-family:
+  --sl-font-system:
     -apple-system,
     BlinkMacSystemFont,
-    "Hiragino Kaku Gothic ProN",
-    "Yu Gothic",
+    "Hiragino Sans",
+    "Yu Gothic UI",
     Meiryo,
     system-ui,
     sans-serif;
@@ -34,7 +34,7 @@
   --sl-color-white: #f5faf6;
   --sl-color-gray-1: #dbe7df;
   --sl-color-gray-2: #b6c6bb;
-  --sl-color-gray-3: #85968b;
+  --sl-color-gray-3: #a3b4a9;
   --sl-color-gray-4: #57685e;
   --sl-color-gray-5: #314139;
   --sl-color-gray-6: #192820;
@@ -51,7 +51,7 @@ header.header {
 }
 
 .site-title {
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .sidebar-pane {
@@ -233,8 +233,8 @@ starlight-toc nav {
   height: 42px;
   place-items: center;
   border-radius: .4rem;
-  color: #fff;
-  background: var(--sl-color-accent);
+  color: var(--sl-color-accent-high);
+  background: var(--sl-color-accent-low);
   font-weight: 900;
 }
 
@@ -363,6 +363,12 @@ starlight-toc nav {
 /* ---------------------------------------------------------
    Mobile
    --------------------------------------------------------- */
+@media (max-width: 1000px) {
+  .wiki-two-column {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 640px) {
   .sl-markdown-content table {
     display: block;
