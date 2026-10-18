@@ -16,6 +16,9 @@ npm run preview
 ```
 
 Cloudflare Pagesではビルドコマンドを`npm run build`、出力先を`dist`にします。
+`.node-version`もリポジトリのビルドルートに含めてください。Node.js 24.14.0を指定しています。
+Cloudflare側に`NODE_VERSION`が設定されている場合は、こちらも`24.14.0`に揃えて再デプロイします。
+ビルドログのNode.jsが22.16.0のままなら、指定ファイルのコミット・ビルドルート・環境変数を確認してください。
 静的配信なのでSSRアダプターやPages Functionsは不要です。
 `public/_headers`はPagesに配置したときに適用されます。Astroのローカルpreviewで本番のヘッダーを検証したことにはなりません。
 
