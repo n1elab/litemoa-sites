@@ -66,9 +66,20 @@ export default defineConfig({
               slug: 'wiki',
             },
             {
+              label: 'スターターガイド',
+              slug: 'wiki/start',
+            },
+            {
               label: '参加方法',
               slug: 'wiki/join',
             },
+          ],
+        },
+        {
+          label: '暮らしと操作',
+          items: [
+            { label: 'サーバーの遊び方', slug: 'wiki/play' },
+            { label: 'コマンド一覧', slug: 'wiki/commands' },
           ],
         },
         {

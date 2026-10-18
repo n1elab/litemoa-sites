@@ -1,9 +1,7 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import SocialEmbeds from '../components/SocialEmbeds.astro';
-import ParticipationNote from '../components/ParticipationNote.astro';
-import ConnectionInfo from '../components/ConnectionInfo.astro';
-import ServerStatus from '../components/ServerStatus.astro';
+import { site } from '../data/site';
 import { getCollection } from 'astro:content';
 const news = (await getCollection('news')).filter(entry => !entry.data.draft).sort((a,b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()).slice(0,3);
 const formatDate = (date: Date) => new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Asia/Tokyo' }).format(date);
@@ -15,13 +13,13 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat('ja-JP', { year: 'num
         <p class="eyebrow">Java版・統合版で遊べる生活経済サーバー</p>
         <h1 id="hero-title" class="hero-heading">ここで、<br />暮らしていこう。</h1>
         <p class="hero-lead">お店で売り買いする。家や街をつくる。顔なじみと話す。リテ鯖が目指すのは、経済を通じて人とつながり、自分の居場所をつくれる生活鯖です。</p>
-        <div class="hero-actions"><a class="primary-button" href="/wiki/join/">リテ鯖への参加方法</a><a class="secondary-link" href="/wiki/rules/">利用規約</a></div>
+        <div class="hero-actions"><a class="primary-button" href="/wiki/start/">スターターガイド</a><a class="secondary-link" href={site.discord}>Discordに参加</a></div>
       </div>
-      <div class="hero-board">
-        <ParticipationNote />
-        <ConnectionInfo compact />
-        <ServerStatus />
-      </div>
+      <aside class="hero-board" aria-label="リテ鯖での暮らし">
+        <p class="eyebrow">アルファ版公開中 · 申請不要</p>
+        <h2>自分の店。<br />いつもの道。<br />顔なじみのいる街。</h2>
+        <p>今日は材料を集める日。明日は店の続きをつくる日。ここで過ごす時間が、少しずつ自分の暮らしになっていく。</p>
+      </aside>
     </div>
   </section>
   <section class="section" id="about" aria-labelledby="about-title">
@@ -44,6 +42,5 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat('ja-JP', { year: 'num
       <div class="news-more"><a href="/news/">お知らせ一覧 →</a></div>
     </div>
   </section>
-  <section class="section" aria-labelledby="guide-title"><div class="shell"><h2 id="guide-title">遊ぶ前に</h2><nav class="guide-links" aria-label="参加とルール"><a href="/wiki/join/">Java版・統合版の参加方法 →</a><a href="/wiki/rules/">利用規約 →</a><a href="/wiki/">ガイドの入口 →</a></nav></div></section>
   <SocialEmbeds />
 </SiteLayout>

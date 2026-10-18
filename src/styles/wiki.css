@@ -38,8 +38,10 @@ header.header { border-bottom: 1px solid var(--line); box-shadow: none; padding-
 .sl-markdown-content h2 { margin-top: 2.5rem; padding-bottom: .5rem; border-bottom: 1px solid var(--line); font-size: 1.5rem; }
 .sl-markdown-content h3 { font-size: 1.25rem; }
 .sl-markdown-content table { display: block; width: 100%; overflow-x: auto; border-collapse: collapse; }
-.sl-markdown-content th, .sl-markdown-content td { padding: .75rem; border: 1px solid var(--line); }
+.sl-markdown-content th, .sl-markdown-content td { min-width: 8rem; padding: .75rem; border: 1px solid var(--line); }
 .sl-markdown-content th { background: var(--accent-low); color: var(--text); }
+.command-table { max-width: 100%; overflow-x: auto; margin-block: 1.5rem; }
+.sl-markdown-content .command-table table { display: table; overflow: visible; width: 100%; margin: 0; }
 .sl-markdown-content code { overflow-wrap: anywhere; }
 .sl-markdown-content .connection-info { margin-block: 1.5rem; }
 .sl-markdown-content .connection-value code { padding: .25rem 0; border: 0; background: none; font-size: 1rem; }

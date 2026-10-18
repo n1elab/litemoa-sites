@@ -1,17 +1,15 @@
 ---
 import { site } from '../data/site';
-import ConnectionInfo from './ConnectionInfo.astro';
-import ParticipationNote from './ParticipationNote.astro';
 ---
 <div class="game-wiki-portal">
-  <ParticipationNote />
-  <nav class="wiki-quick-grid" aria-label="ガイドの入口">
-    <a class="wiki-quick-card" href="/wiki/join/"><strong>参加方法</strong><small>Java版・統合版の接続情報と手順</small></a>
-    <a class="wiki-quick-card" href="/wiki/rules/"><strong>利用規約</strong><small>禁止行為とサーバーのルール</small></a>
-    <a class="wiki-quick-card" href="/news/"><strong>お知らせ</strong><small>メンテナンス・公開情報</small></a>
-    <a class="wiki-quick-card" href="/wiki/policy/"><strong>プライバシー</strong><small>データの取扱いと連絡先</small></a>
+  <p>参加の準備は<a href="/wiki/start/">スターターガイド</a>から。遊び始めてからの操作は、遊び方とコマンド一覧で探せます。</p>
+  <nav aria-label="Wikiの記事">
+    <h2>はじめる</h2>
+    <ul><li><a href="/wiki/start/">スターターガイド</a></li><li><a href="/wiki/join/">Java版・統合版の参加方法</a></li></ul>
+    <h2>暮らしと操作</h2>
+    <ul><li><a href="/wiki/play/">サーバーの遊び方</a> — 売買・ショップ・保護・移動</li><li><a href="/wiki/commands/">コマンド一覧</a></li></ul>
+    <h2>ルールとお知らせ</h2>
+    <ul><li><a href="/wiki/rules/">利用規約</a></li><li><a href="/wiki/policy/">プライバシーポリシー</a></li><li><a href="/news/">お知らせ</a></li></ul>
   </nav>
-  <h2>接続情報</h2>
-  <ConnectionInfo />
-  <aside class="wiki-help-note"><strong>困ったときは</strong><p>ガイドで解決しないときは、<a href={site.discord}>Discord</a>で相談できます。</p></aside>
+  <p>解決しないときは<a href={site.discord}>Discordで相談</a>してください。</p>
 </div>

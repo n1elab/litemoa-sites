@@ -13,7 +13,7 @@ export const site = {
 
 export const navigation = [
   { href: '/', label: 'サーバー紹介' },
-  { href: '/wiki/join/', label: '参加方法' },
-  { href: '/wiki/', label: 'ガイド' },
+  { href: '/wiki/start/', label: 'はじめる' },
+  { href: '/wiki/', label: 'Wiki' },
   { href: '/news/', label: 'お知らせ' },
 ];
