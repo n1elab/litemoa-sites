@@ -1,0 +1,15 @@
+<script is:inline>
+  (() => {
+    let saved = 'auto';
+    try {
+      const current = localStorage.getItem('starlight-theme');
+      const legacy = localStorage.getItem('litemoa-theme');
+      const value = current === null ? legacy : current;
+      if (value === 'light' || value === 'dark') saved = value;
+    } catch { /* Storage is optional. */ }
+    const system = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    document.documentElement.dataset.theme = saved === 'auto' ? system : saved;
+    document.documentElement.dataset.themePreference = saved;
+    document.documentElement.dataset.enhanced = '';
+  })();
+</script>

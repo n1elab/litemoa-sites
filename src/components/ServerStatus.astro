@@ -1,0 +1,37 @@
+---
+import { site } from '../data/site';
+---
+<details class="server-status" data-server-status data-address={site.address}>
+  <summary>稼働状況を確認</summary>
+  <p>mcstatus.ioに接続して確認します。稼働中でも、メンテナンス等で参加できない場合があります。</p>
+  <p role="status" aria-live="polite" data-status-text>まだ確認していません。</p>
+  <button type="button" data-status-retry hidden>もう一度確認</button>
+  <noscript><p>稼働状況の取得にはJavaScriptが必要です。メンテナンス情報は<a href="/news/">お知らせ</a>をご確認ください。</p></noscript>
+</details>
+<script>
+  document.querySelectorAll<HTMLDetailsElement>('[data-server-status]').forEach((panel) => {
+    const text = panel.querySelector('[data-status-text]');
+    const retry = panel.querySelector<HTMLButtonElement>('[data-status-retry]');
+    let loading = false;
+    async function update() {
+      if (loading) return;
+      loading = true;
+      if (retry) retry.disabled = true;
+      if (text) text.textContent = '稼働状況を確認中…';
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 6000);
+      try {
+        const response = await fetch(`https://api.mcstatus.io/v2/status/java/${encodeURIComponent(panel.dataset.address || '')}`, { signal: controller.signal });
+        if (!response.ok) throw new Error('status unavailable');
+        const data = await response.json();
+        const validCount = Number.isInteger(data.players?.online) && data.players.online >= 0;
+        if (text) text.textContent = data.online === true
+          ? `オンライン${validCount ? ` · ${data.players.online}人が参加中` : ''}（${new Intl.DateTimeFormat('ja-JP', { hour: '2-digit', minute: '2-digit' }).format(new Date())}確認）`
+          : '現在オフラインです。';
+      } catch { if (text) text.textContent = '稼働状況を取得できませんでした。参加案内やお知らせをご確認ください。'; }
+      finally { clearTimeout(timeout); loading = false; if (retry) retry.disabled = false; }
+    }
+    if (retry) { retry.hidden = false; retry.addEventListener('click', update); }
+    panel.addEventListener('toggle', () => { if (panel.open && !panel.dataset.checked) { panel.dataset.checked = 'true'; update(); } });
+  });
+</script>

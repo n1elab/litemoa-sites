@@ -1,0 +1,53 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../data/site';
+const [docs, news] = await Promise.all([getCollection('docs'), getCollection('news')]);
+const plain = (body: string) => body.replace(/^import\s.+$/gm, '').replace(/<[^>]*>/g, ' ').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/[#*`{}|]/g, ' ').replace(/\s+/g, ' ').trim();
+const normalize = (text: string) => text.normalize('NFKC').toLocaleLowerCase('ja-JP');
+const entries = [
+  { title: 'リテ鯖のサーバー紹介', description: '経済を通じて人とつながり、自分の居場所をつくれる生活鯖を目指しています。アルファ版は申請不要です。', href: '/', body: 'ここで暮らしていこう 商店街 チェストショップ 売買 家 街 顔なじみ 会話 採掘 探索 農業 建築 土地保護 クロスプレイ' },
+  ...docs.map(entry => ({ title: entry.data.title, description: entry.data.description || '', href: `/${entry.id}/`, body: plain(entry.body || '') + (entry.id === 'wiki/join' || entry.id === 'wiki' ? ` ${site.address} ${site.bedrockPort} ${site.gamertag} ${site.version} アルファ版 申請不要` : '') })),
+  ...news.filter(entry => !entry.data.draft).sort((a,b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()).map(entry => ({ title: entry.data.title, description: entry.data.description, href: `/news/${entry.id}/`, body: plain(entry.body || '') })),
+];
+---
+<SiteLayout title="サイト内検索" description="リテ鯖の参加方法・利用規約・ガイド・お知らせを検索できます。">
+  <section class="news-page"><div class="shell news-article-shell">
+    <h1>サイト内検索</h1>
+    <form class="search-form" role="search" action="/search/" method="get" data-site-search>
+      <label for="site-query">キーワード</label>
+      <div class="search-input-row"><input id="site-query" type="search" name="q" maxlength="120" aria-describedby="search-help" /><button class="primary-button" type="submit">検索</button></div>
+      <p id="search-help">複数の言葉を空白で区切って絞り込めます。</p>
+    </form>
+    <noscript><p>全ページを表示しています。ブラウザのページ内検索でも探せます。</p></noscript>
+    <p role="status" aria-live="polite" data-result-status>{entries.length}件のページ</p>
+    <ul class="search-results">
+      {entries.map(entry => <li data-search-entry data-search-text={normalize(`${entry.title} ${entry.description} ${entry.body}`)}><h2><a href={entry.href}>{entry.title}</a></h2><p>{entry.description}</p></li>)}
+    </ul>
+    <p data-search-empty hidden>一致するページがありません。短い言葉で検索するか、<a href="/wiki/">ガイドの入口</a>からお探しください。</p>
+  </div></section>
+  <script>
+    const form = document.querySelector<HTMLFormElement>('[data-site-search]');
+    const input = document.querySelector<HTMLInputElement>('#site-query');
+    const entries = [...document.querySelectorAll<HTMLElement>('[data-search-entry]')];
+    const status = document.querySelector('[data-result-status]');
+    const empty = document.querySelector<HTMLElement>('[data-search-empty]');
+    function search() {
+      const query = (input?.value || '').slice(0,120).normalize('NFKC').toLocaleLowerCase('ja-JP').trim();
+      const words = query.split(/\s+/).filter(Boolean);
+      let count = 0;
+      entries.forEach(entry => { entry.hidden = !words.every(word => entry.dataset.searchText?.includes(word)); if (!entry.hidden) count++; });
+      if (status) status.textContent = query ? `「${input?.value.trim()}」の検索結果：${count}件` : `${count}件のページ`;
+      if (empty) empty.hidden = count !== 0;
+      const url = new URL(location.href);
+      if (query) url.searchParams.set('q', input?.value.trim() || ''); else url.searchParams.delete('q');
+      try { history.replaceState(null, '', url); } catch { /* Search still works if history is restricted. */ }
+    }
+    if (input) input.value = new URLSearchParams(location.search).get('q')?.slice(0,120) || '';
+    form?.addEventListener('submit', event => { event.preventDefault(); search(); });
+    let timer: ReturnType<typeof setTimeout>;
+    input?.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(search, 200); });
+    window.addEventListener('popstate', () => { if (input) input.value = new URLSearchParams(location.search).get('q')?.slice(0,120) || ''; search(); });
+    search();
+  </script>
+</SiteLayout>

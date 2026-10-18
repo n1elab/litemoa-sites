@@ -1,63 +1,17 @@
+---
+import { site } from '../data/site';
+import ConnectionInfo from './ConnectionInfo.astro';
+import ParticipationNote from './ParticipationNote.astro';
+---
 <div class="game-wiki-portal">
-  <nav class="wiki-quick-grid" aria-label="Wikiのよく使うページ">
-    <a href="/wiki/join/" class="wiki-quick-card">
-      <span class="wiki-quick-icon" aria-hidden="true">▶</span>
-      <strong>参加方法</strong>
-      <small>Java版・統合版から参加する</small>
-    </a>
-
-    <a href="/wiki/rules/" class="wiki-quick-card">
-      <span class="wiki-quick-icon" aria-hidden="true">✓</span>
-      <strong>利用規約</strong>
-      <small>遊ぶ前に確認してください</small>
-    </a>
-
-    <a href="https://litemoamap.n1e.net/" target="_blank" rel="noopener noreferrer" class="wiki-quick-card">
-      <span class="wiki-quick-icon" aria-hidden="true">⌖</span>
-      <strong>ウェブマップ</strong>
-      <small>ブラウザからワールドを見る ↗</small>
-    </a>
-
-    <a href="https://discord.gg/UyKV4BDxBR" target="_blank" rel="noopener noreferrer" class="wiki-quick-card">
-      <span class="wiki-quick-icon" aria-hidden="true">#</span>
-      <strong>Discord</strong>
-      <small>最新情報・コミュニティ ↗</small>
-    </a>
+  <ParticipationNote />
+  <nav class="wiki-quick-grid" aria-label="ガイドの入口">
+    <a class="wiki-quick-card" href="/wiki/join/"><strong>参加方法</strong><small>Java版・統合版の接続情報と手順</small></a>
+    <a class="wiki-quick-card" href="/wiki/rules/"><strong>利用規約</strong><small>禁止行為とサーバーのルール</small></a>
+    <a class="wiki-quick-card" href="/news/"><strong>お知らせ</strong><small>メンテナンス・公開情報</small></a>
+    <a class="wiki-quick-card" href="/wiki/policy/"><strong>プライバシー</strong><small>データの取扱いと連絡先</small></a>
   </nav>
-
-  <div class="wiki-two-column">
-    <section class="wiki-info-box">
-      <h2>はじめて遊ぶ方へ</h2>
-      <ul class="wiki-link-list">
-        <li><a href="/wiki/join/">サーバーへの参加方法</a></li>
-        <li><a href="/wiki/rules/">利用規約を確認する</a></li>
-        <li><a href="/wiki/policy/">プライバシーポリシー</a></li>
-      </ul>
-    </section>
-
-    <section class="wiki-info-box">
-      <h2>サーバー情報</h2>
-      <dl class="wiki-server-data">
-        <div>
-          <dt>サーバーアドレス</dt>
-          <dd><code>liteplay.n1e.net</code></dd>
-        </div>
-        <div>
-          <dt>統合版ポート</dt>
-          <dd><code>19132</code></dd>
-        </div>
-        <div>
-          <dt>対応</dt>
-          <dd>Java版 / 統合版</dd>
-        </div>
-      </dl>
-    </section>
-  </div>
-
-  <aside class="wiki-help-note">
-    <strong>困ったときは</strong>
-    <p>
-      Wikiで解決しないときは、<a href="https://discord.gg/UyKV4BDxBR" target="_blank" rel="noopener noreferrer">Discord</a>で相談できます。
-    </p>
-  </aside>
+  <h2>接続情報</h2>
+  <ConnectionInfo />
+  <aside class="wiki-help-note"><strong>困ったときは</strong><p>ガイドで解決しないときは、<a href={site.discord}>Discord</a>で相談できます。</p></aside>
 </div>

@@ -1,195 +1,49 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import SocialEmbeds from '../components/SocialEmbeds.astro';
+import ParticipationNote from '../components/ParticipationNote.astro';
+import ConnectionInfo from '../components/ConnectionInfo.astro';
+import ServerStatus from '../components/ServerStatus.astro';
 import { getCollection } from 'astro:content';
-
-const news = (await getCollection('news'))
-  .filter((entry) => !entry.data.draft)
-  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
-  .slice(0, 3);
-
-const formatDate = (date: Date) =>
-  new Intl.DateTimeFormat('ja-JP', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(date);
+const news = (await getCollection('news')).filter(entry => !entry.data.draft).sort((a,b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()).slice(0,3);
+const formatDate = (date: Date) => new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Asia/Tokyo' }).format(date);
 ---
-
 <SiteLayout>
-  <section class="hero">
-
-    <div class="shell hero-inner">
-      <img
-        class="hero-server-icon"
-        src="/server-icon.png"
-        alt="Litemoa Server アイコン"
-        width="96"
-        height="96"
-      />
-
-      <div class="server-status" data-server-status aria-live="polite">
-        <span class="status-dot"></span>
-        <span data-status-text>サーバー情報を取得中…</span>
-      </div>
-
-      <p class="eyebrow">Java版・統合版対応の生活経済サーバー</p>
-
-      <h1>Litemoa Server<span>リテ鯖</span></h1>
-      <p class="hero-lead">
-        商店街にチェストショップを開く。集めたアイテムを、誰かに売る。
-        リテ鯖は、プレイヤー同士の売買を中心にしたサバイバルサーバーです。
-      </p>
-
-      <div class="hero-actions">
-        <a class="primary-button" href="/wiki/join/">参加方法を見る</a>
-
-        <button
-          class="secondary-button"
-          type="button"
-          data-copy-ip
-          data-ip="liteplay.n1e.net"
-        >
-          <span>liteplay.n1e.net</span>
-          <strong data-copy-label>IPをコピー</strong>
-        </button>
-      </div>
-
-      <p class="hero-note">Java版 / 統合版対応 · PC / スマホ / タブレット / ゲーム機</p>
-    </div>
-  </section>
-
-  <section class="section" id="about">
-    <div class="shell section-heading compact">
-      <h2>お店をつくる。<br />鯖民同士で、売り買いする。</h2>
-    </div>
-    <div class="shell about-panel">
-      <p>商店街にチェストショップを開いたり、ゲーム内の仕組みを使ったサービスを考えたり。売るものだけでなく、お店の形も鯖民次第。運営も同じワールドでサバイバルをしながら遊ぶ方針です。</p>
-      <a class="world-map-link" href="https://litemoamap.n1e.net/" target="_blank" rel="noopener noreferrer">リテ鯖のワールドをマップで見る ↗</a>
-    </div>
-  </section>
-
-  <section class="section" id="features">
-    <div class="shell section-heading compact"><h2>リテ鯖での暮らし</h2></div>
-    <div class="shell feature-grid">
-      <article class="feature-card">
-        <h3>資源を集めて、建てる</h3>
-        <p>採掘、冒険、建築。遊びの土台はMinecraft本来のサバイバルです。</p>
-      </article>
-      <article class="feature-card">
-        <h3>商店街に、自分のお店を</h3>
-        <p>チェストショップでアイテムを売買。お店の建物や品ぞろえも、自分で考えてつくれます。</p>
-      </article>
-    </div>
-  </section>
-  <section class="section news-home" id="news">
-    <div class="shell section-heading compact"><h2>お知らせ</h2></div>
-
-    <div class="shell news-list">
-      {news.length > 0 ? (
-        news.map((item) => (
-          <a class="news-row" href={`/news/${item.id}/`}>
-            <time datetime={item.data.publishedAt.toISOString()}>
-              {formatDate(item.data.publishedAt)}
-            </time>
-            <span class="news-category">{item.data.category}</span>
-            <strong>{item.data.title}</strong>
-            <span class="news-arrow" aria-hidden="true">→</span>
-          </a>
-        ))
-      ) : (
-        <div class="news-empty">現在公開中のお知らせはありません。</div>
-      )}
-    </div>
-
-    <div class="shell news-more">
-      <a href="/news/">お知らせ一覧 →</a>
-    </div>
-  </section>
-
-  <section class="wiki-promo">
-    <div class="shell wiki-promo-inner">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="shell hero-layout">
       <div>
-        <h2>Wiki</h2>
+        <p class="eyebrow">Java版・統合版で遊べる生活経済サーバー</p>
+        <h1 id="hero-title" class="hero-heading">ここで、<br />暮らしていこう。</h1>
+        <p class="hero-lead">お店で売り買いする。家や街をつくる。顔なじみと話す。リテ鯖が目指すのは、経済を通じて人とつながり、自分の居場所をつくれる生活鯖です。</p>
+        <div class="hero-actions"><a class="primary-button" href="/wiki/join/">リテ鯖への参加方法</a><a class="secondary-link" href="/wiki/rules/">利用規約</a></div>
       </div>
-
-      <div class="wiki-links">
-        <a href="/wiki/">Wikiトップ <span>→</span></a>
-        <a href="/wiki/join/">参加方法 <span>→</span></a>
-        <a href="/wiki/rules/">利用規約 <span>→</span></a>
+      <div class="hero-board">
+        <ParticipationNote />
+        <ConnectionInfo compact />
+        <ServerStatus />
       </div>
     </div>
   </section>
-
+  <section class="section" id="about" aria-labelledby="about-title">
+    <div class="shell">
+      <div class="about-layout">
+        <h2 id="about-title">商売も、採掘も、<br />ここで過ごす毎日の一部。</h2>
+        <p>採ってきたものをお店に並べる。誰かのお店で、建築に使う材料を買う。作業の合間に立ち話をする。そんな日々を重ねて、「ここで暮らしていたい」と思える場所を、鯖民と運営でつくっていきます。</p>
+      </div>
+      <div class="feature-grid" id="features">
+        <article class="feature-card"><h3>商店街に、自分の店を。</h3><p>チェストショップでアイテムを売り買い。建物も品ぞろえも、自分で考えてつくれます。</p></article>
+        <article class="feature-card"><h3>自分の拠点で、サバイバル。</h3><p>建築、採掘、探索、農業。土地保護を使いながら、自分のペースで暮らせます。</p></article>
+      </div>
+    </div>
+  </section>
+  <section class="section news-home" id="news" aria-labelledby="news-title">
+    <div class="shell"><h2 id="news-title">お知らせ</h2>
+      <div class="news-list">
+        {news.length ? news.map(item => <a class="news-row" href={`/news/${item.id}/`}><time datetime={item.data.publishedAt.toISOString()}>{formatDate(item.data.publishedAt)}</time><span class="news-category">{item.data.category}</span><strong>{item.data.title}</strong><span class="news-arrow" aria-hidden="true">→</span></a>) : <p class="news-empty">現在公開中のお知らせはありません。</p>}
+      </div>
+      <div class="news-more"><a href="/news/">お知らせ一覧 →</a></div>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="guide-title"><div class="shell"><h2 id="guide-title">遊ぶ前に</h2><nav class="guide-links" aria-label="参加とルール"><a href="/wiki/join/">Java版・統合版の参加方法 →</a><a href="/wiki/rules/">利用規約 →</a><a href="/wiki/">ガイドの入口 →</a></nav></div></section>
   <SocialEmbeds />
-
-  <section class="join-cta">
-    <div class="shell join-cta-inner">
-
-      <h2>リテ鯖で遊んでみませんか。</h2>
-
-
-      <div class="hero-actions center">
-        <a class="primary-button" href="/wiki/join/">参加方法を見る</a>
-        <a
-          class="secondary-link"
-          href="https://discord.gg/UyKV4BDxBR"
-          target="_blank"
-          rel="noopener noreferrer"
-        >Discordに参加 ↗</a>
-      </div>
-    </div>
-  </section>
-
-  <script>
-    const statusRoot = document.querySelector('[data-server-status]');
-    const statusText = document.querySelector('[data-status-text]');
-
-    async function updateServerStatus() {
-      try {
-        const response = await fetch('https://api.mcstatus.io/v2/status/java/liteplay.n1e.net');
-        if (!response.ok) throw new Error('status api error');
-
-        const data = await response.json();
-
-        if (data.online) {
-          statusRoot?.classList.add('online');
-
-          if (statusText) {
-            statusText.textContent =
-              `オンライン · ${data.players.online} / ${data.players.max} 人`;
-          }
-        } else if (statusText) {
-          statusText.textContent = 'オフライン';
-        }
-      } catch {
-        if (statusText) {
-          statusText.textContent = '稼働状況を取得できません';
-        }
-      }
-    }
-
-    updateServerStatus();
-
-    document.querySelector('[data-copy-ip]')?.addEventListener('click', async (event) => {
-      const button = event.currentTarget;
-
-      if (!(button instanceof HTMLElement)) return;
-
-      const ip = button.dataset.ip || 'liteplay.n1e.net';
-      const label = button.querySelector('[data-copy-label]');
-
-      try {
-        await navigator.clipboard.writeText(ip);
-
-        if (label) label.textContent = 'コピーしました';
-
-        window.setTimeout(() => {
-          if (label) label.textContent = 'IPをコピー';
-        }, 1600);
-      } catch {
-        if (label) label.textContent = ip;
-      }
-    });
-  </script>
 </SiteLayout>

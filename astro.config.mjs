@@ -13,16 +13,30 @@ export default defineConfig({
       title: 'Litemoa Wiki',
       description: 'Litemoa Server（リテ鯖）の公式Wiki',
       favicon: '/server-icon.png',
+      defaultLocale: 'root',
+      locales: { root: { label: '日本語', lang: 'ja' } },
+      pagefind: false,
+      head: [
+        { tag: 'meta', attrs: { property: 'og:image', content: 'https://litemoa.n1e.net/og-image.png' } },
+        { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://litemoa.n1e.net/og-image.png' } },
+      ],
 
       // 公式サイト / Wiki 共通の404を src/pages/404.astro で使います。
       disable404Route: true,
 
       customCss: [
+        './src/styles/tokens.css',
+        './src/styles/shared.css',
         './src/styles/wiki.css',
       ],
 
       components: {
         Footer: './src/components/WikiFooter.astro',
+        Header: './src/components/WikiHeader.astro',
+        SiteTitle: './src/components/Brand.astro',
+        ThemeProvider: './src/components/ThemeProvider.astro',
+        ThemeSelect: './src/components/ThemeSelect.astro',
+        Search: './src/components/SearchLink.astro',
       },
 
       social: [

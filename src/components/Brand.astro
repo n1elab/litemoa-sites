@@ -1,0 +1,14 @@
+---
+import { site } from '../data/site';
+---
+<a class="brand" href="/" aria-label={`${site.name} ホーム`}>
+  <img src="/server-icon.png" alt="" width="40" height="40" />
+  <span><strong>{site.name}</strong><small>{site.shortName}</small></span>
+</a>
+<style>
+  .brand { display: inline-flex; align-items: center; gap: .625rem; min-width: 0; color: var(--text); text-decoration: none; }
+  img { flex: none; width: 2.5rem; height: 2.5rem; border-radius: var(--radius); image-rendering: pixelated; }
+  span { display: grid; line-height: 1.4; min-width: 0; }
+  strong { font-size: 1rem; font-weight: 700; overflow-wrap: anywhere; }
+  small { font-size: .8125rem; color: var(--muted); }
+</style>

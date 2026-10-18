@@ -1,12 +1,17 @@
 import { defineCollection } from 'astro:content';
 import { docsLoader } from '@astrojs/starlight/loaders';
-import { docsSchema } from '@astrojs/starlight/schema';
+import { docsSchema, i18nSchema } from '@astrojs/starlight/schema';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 const docs = defineCollection({
   loader: docsLoader(),
   schema: docsSchema(),
+});
+
+const i18n = defineCollection({
+  loader: glob({ pattern: '*.json', base: './src/content/i18n' }),
+  schema: i18nSchema(),
 });
 
 const news = defineCollection({
@@ -27,5 +32,6 @@ const news = defineCollection({
 
 export const collections = {
   docs,
+  i18n,
   news,
 };

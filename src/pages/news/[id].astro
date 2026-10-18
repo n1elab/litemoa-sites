@@ -46,6 +46,7 @@ const formatDate = (date: Date) =>
       </header>
 
       <div class="news-content">
+        {['2026-10-12-beta-postponed', '2026-10-17-263'].includes(post.id) && <aside class="participation-note"><strong>現在はアルファ版に申請なしで参加できます。</strong><p>以下は公開当時のお知らせです。最新の接続手順は<a href="/wiki/join/">参加方法</a>をご確認ください。</p></aside>}
         <Content />
       </div>
     </div>

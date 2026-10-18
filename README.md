@@ -1,272 +1,97 @@
-# Litemoa Server Website + Wiki + NEWS
+# Litemoa Server 公式サイト・ガイド
 
-`litemoa.n1e.net` の中に、
+Astroによる静的サイト。ガイドはStarlight、NEWSはMarkdownで管理します。
+公式サイトとガイドは同じ配色・ナビゲーション・接続情報を使い、既存のURLを維持しています。
 
-- 公式サイト
-- NEWS
-- 公式Wiki
+## 開発・ビルド
 
-を **1つのAstroプロジェクト**としてまとめた構成です。
+Node.jsは`.node-version`、依存関係は`package-lock.json`で固定しています。
 
-見た目は同じにせず、役割ごとに分けています。
-
-- `/` : 公式サイト向けのダークなMinecraftサーバーデザイン
-- `/news/` : 公式サイトと同じデザインのお知らせ
-- `/wiki/` : 日本のゲームWikiを意識した、情報を探しやすいWikiデザイン
-
-## URL
-
-- `https://litemoa.n1e.net/`
-- `https://litemoa.n1e.net/news/`
-- `https://litemoa.n1e.net/wiki/`
-- `https://litemoa.n1e.net/wiki/join/`
-- `https://litemoa.n1e.net/wiki/rules/`
-- `https://litemoa.n1e.net/wiki/policy/`
-
-## なぜ1プロジェクトで問題ない？
-
-Astroの普通のページは `src/pages/`、
-WikiはStarlightの `src/content/docs/wiki/` と役割を分けています。
-
-CSSも、
-
-- `src/styles/site.css`
-- `src/styles/wiki.css`
-
-で分離しています。
-
-そのため、デプロイ・依存関係・ドメイン管理は1つにしながら、
-公式サイトとWikiは別サイトに近い感覚で編集できます。
-
-Starlight側では `disable404Route: true` にしているため、
-404は `src/pages/404.astro` の1ページを共通利用します。
-
-## NEWSの追加方法
-
-`src/content/news/` にMarkdownファイルを追加してください。
-
-例:
-
-```text
-src/content/news/2026-09-22-maintenance.md
+```sh
+npm ci
+npm run dev
+npm run check:contrast
+npm run build
+npm run preview
 ```
 
-内容:
+Cloudflare Pagesではビルドコマンドを`npm run build`、出力先を`dist`にします。
+静的配信なのでSSRアダプターやPages Functionsは不要です。
+`public/_headers`はPagesに配置したときに適用されます。Astroのローカルpreviewで本番のヘッダーを検証したことにはなりません。
 
-```md
+## ページ
+
+- `/`：紹介、現在の公開状況、接続情報、告知。
+- `/wiki/`：ガイドの入口。
+- `/wiki/join/`：Java版・統合版の接続手順。
+- `/wiki/rules/`、`/wiki/policy/`：利用規約、プライバシー。
+- `/news/`、`/news/<id>/`：告知一覧と記事。
+- `/search/`：日本語の本文検索。JavaScriptなしでは全コンテンツのリンク一覧。
+- `404.html`：共通404。配信環境でも未知のURLがHTTP404になることを確認してください。
+
+停止中のマップへの導線は掲載していません。
+
+## 編集場所
+
+| 内容 | ファイル |
+| --- | --- |
+| アドレス・統合版ポート・ゲーマータグ・対応版・連絡先 | `src/data/site.ts` |
+| 現在の公開状況（現在はアルファ版・申請不要） | `src/components/ParticipationNote.astro` |
+| 公式トップ | `src/pages/index.astro` |
+| 共通配色・フォント | `src/styles/tokens.css` |
+| 共通操作部品・フッター | `src/styles/shared.css` |
+| 公式サイトの配置 | `src/styles/site.css` |
+| ガイドの配置とStarlightへの色の対応 | `src/styles/wiki.css` |
+| ガイド本文 | `src/content/docs/wiki/` |
+| NEWS本文 | `src/content/news/` |
+| ガイドのサイドバー | `astro.config.mjs` |
+| 共通ナビ・フッター・テーマ・接続情報 | `src/components/` |
+
+接続情報を更新するときは本文に別の値を直書きせず、共通データを参照してください。
+新しいガイドは実サーバーの手順を確認してから作成し、完成した記事のみサイドバーへ追加します。
+
+## NEWS
+
+`src/content/news/`へMarkdownを追加します。
+
+```yaml
 ---
-title: メンテナンスのお知らせ
-description: 9月22日にメンテナンスを実施します。
-publishedAt: 2026-09-22
-category: メンテナンス
+title: 記事タイトル
+description: 記事固有の要約
+publishedAt: 2026-10-18
+category: お知らせ
 draft: false
 ---
-
-ここに本文を書きます。
 ```
 
-`draft: true` にするとサイトへ表示されません。
+`draft: true`は一覧・記事・検索から除外されます。日付だけでは予約公開になりません。
+メンテナンスは具体的な年月日と時刻・時間帯を明記してください。
+過去の申請式アルファ告知は履歴として残し、記事ページに現在の参加案内を添えています。
 
-トップページには新しい順で3件、
-`/news/` には公開中のNEWSすべてが表示されます。
+## 検索
 
-## Wiki記事の追加
+記事とガイドから静的HTMLへ検索対象を埋め込み、ブラウザーで絞り込みます。
+NFKC正規化と大文字小文字の統一を行い、空白で区切った複数語はAND検索です。
+検索は外部API・Pagefindのネイティブ実行・WASMに依存しません。
+現在は8件程度のコンテンツ向けの方式です。大幅に記事が増えた場合はHTML容量と検索速度を再測定してください。
 
-Wiki記事は:
+## 外部サービス
 
-```text
-src/content/docs/wiki/
-```
+広告、Discord・Xの埋め込み、mcstatus.ioの稼働状況は、利用者が該当欄を開いてから接続します。
+通常リンクから外部サービスを開く方法も残しています。
+一度読み込んだ外部コンテンツは、欄を閉じても接続や保存データが取り消されるわけではありません。
 
-にMarkdown / MDXで追加します。
+広告は専用のdataドキュメント内のiframeで読み込み、親ページのDOM・ストレージを共有しません。
+将来CSPを追加するときは、dataフレームと広告・SNS各配信元の互換性をプレビュー環境で検証してください。
+広告掲載規約・配信可否・カテゴリ設定は運営と広告事業者で確認してください。
 
-サイドバーへ常時表示したい記事は
-`astro.config.mjs` の `sidebar` に追加してください。
+## 検証の範囲
 
-## Wikiデザイン
+`npm run build`は生成HTMLの日本語指定・ローカルリンク・検索本文・404方針も検査し、不足があれば失敗します。
+`npm run check:contrast`は共通トークンの文字・UI境界の色を計算します。
+どちらも、全状態の実表示・読み上げ・WCAG全体の適合検証の代替ではありません。
 
-`src/styles/wiki.css` にまとめています。
+公開前には両テーマ、キーボード、320px幅、200%/400%拡大、実機の接続手順、検索、外部埋め込み、HTTP404、配信ヘッダーを確認してください。
+実利用者のCore Web Vitalsは公開後に別途評価します。
 
-一般的な日本のゲームWikiでよく見られる、
-
-- 明るい本文
-- 緑のアクセント
-- はっきりした見出し
-- 左サイドバー
-- 表を見やすく
-- 「よく見るページ」カード
-- 情報ボックス
-
-を意識しています。
-
-特定のWikiサイトのデザインをコピーしているわけではありません。
-
-Wikiトップのカード内容は:
-
-```text
-src/components/WikiPortal.astro
-```
-
-で編集できます。
-
-## Discord / X 埋め込み
-
-トップページの:
-
-```text
-src/components/SocialEmbeds.astro
-```
-
-にまとめています。
-
-Discord:
-- Server ID: `1320711247301316628`
-
-X:
-- `https://x.com/litemoa`
-
-埋め込みを削除・変更するときはこの1ファイルを編集してください。
-
-### プライバシーについて
-
-Discord・Xの埋め込みは外部サービスのコンテンツを読み込みます。
-公開前に、現在のプライバシーポリシーが埋め込みサービスの利用実態に合っているか確認してください。
-
-## 404
-
-404は公式サイトとWikiで共通です。
-
-```text
-src/pages/404.astro
-```
-
-存在しないURLが `/wiki/` から始まる場合は、
-ブラウザ側で自動的にWiki向けの案内文へ切り替わります。
-
-例:
-
-```text
-/hogehoge
-→ 公式サイト寄りの案内
-
-/wiki/hogehoge
-→ Wiki寄りの案内
-```
-
-ただしページ自体は1ファイルなので、管理が簡単です。
-
-## 主な編集場所
-
-### 公式サイト
-- `src/pages/index.astro`
-- `src/styles/site.css`
-
-### NEWS
-- `src/content/news/`
-
-### Wiki
-- `src/content/docs/wiki/`
-- `src/components/WikiPortal.astro`
-- `src/styles/wiki.css`
-
-### ヘッダー / フッター / SEO
-- `src/layouts/SiteLayout.astro`
-
-### 404
-- `src/pages/404.astro`
-
-## 開発
-
-```bash
-npm install
-npm run dev
-```
-
-## ビルド
-
-```bash
-npm run build
-```
-
-出力先:
-
-```text
-dist/
-```
-
-## 公開前の確認
-
-`src/content/docs/wiki/policy.md` のデータ保持期間には、
-以前のWikiから引き継いだ
-
-`通常[例: 3ヶ月〜6ヶ月]`
-
-という仮記載があります。
-
-実際の運用に合わせて確認してください。
-
-またDiscord・X埋め込みを追加したため、
-プライバシーポリシーの外部サービス記載も実際の運用と一致するか確認してください。
-
-
-## サーバーコンセプトについて
-
-公式サイトの文章は、現時点のLitemoaの方向性をもとにしています。
-
-主なイメージ:
-- Minecraft本来のサバイバルを土台にする
-- 「もう一つの日常」をのんびり楽しめる
-- プレイヤー同士の売買やお店が経済の中心
-- 鯖民同士の雑談や交流も大切にする
-- 運営も鯖民と近い距離で一緒に遊ぶ
-- Java版 / 統合版のクロスプレイ
-
-まだ方針が変わる可能性がある部分は、断定的な仕様ではなく柔らかい表現にしています。
-トップページの文章を変更する場合は `src/pages/index.astro` を編集してください。
-
-
-## ライト / ダークテーマ
-
-公式サイト・NEWS・共通404は、ヘッダー右上のテーマボタンで切り替えできます。
-
-- 初回: OS / ブラウザの `prefers-color-scheme` に合わせる
-- 切り替え後: `localStorage` の `litemoa-theme` に保存
-- 対応範囲: 公式サイト / NEWS / 共通404
-- Wiki: Starlight標準のライト / ダーク切り替えを利用
-
-公式サイト側の配色は `src/styles/site.css` の以下で編集できます。
-
-```css
-:root[data-theme='dark'] { ... }
-:root[data-theme='light'] { ... }
-```
-
-## もう1枠広告を追加するなら
-
-おすすめ位置:
-
-```text
-FEATURES
-↓
-広告
-↓
-NEWS
-```
-
-トップのヒーロー直下には置かず、サイト内容をある程度見てもらった後に配置します。
-NEWS記事本文の途中にも置かないため、読みやすさを崩しにくい位置です。
-
-推奨サイズ:
-
-- PC（800px以上）: `728 × 90`
-- タブレット（500〜799px）: `468 × 60`
-- スマホ（500px未満）: `320 × 100`
-
-`src/styles/site.css` に `.recommended-ad-slot` を用意してあります。
-
-実際の広告コードを取得したら、`src/pages/index.astro` の FEATURES 終了直後へ
-新しい広告コンポーネントを追加してください。
-
-現在の `AdSlot.astro` は既存広告用なので、
-広告サービス側で2つ目の広告タグを発行できる場合は
-`AdBannerSlot.astro` など別ファイルに分けるのがおすすめです。
+依存関係に対する`npm audit fix --force`の自動適用は避け、互換性とビルド入力への到達可能性を確認して更新してください。

@@ -1,0 +1,5 @@
+---
+import { navigation } from '../data/site';
+const path = Astro.url.pathname;
+---
+{navigation.map(({ href, label }) => <a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a>)}

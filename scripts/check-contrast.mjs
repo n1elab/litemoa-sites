@@ -1,60 +1,27 @@
 import { readFileSync } from 'node:fs';
-
-// Static palette checks; this does not audit browser layout or external embeds.
-const css = readFileSync(new URL('../src/styles/site.css', import.meta.url), 'utf8');
-const blocks = [...css.matchAll(/:root\[data-theme='(dark|light)'\]\s*\{([^}]+)\}/g)];
-const luminance = (hex) => {
-  const rgb = hex.match(/[a-f\d]{2}/gi).map((part) => parseInt(part, 16) / 255)
-    .map((value) => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
-  return rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722;
+const css = readFileSync(new URL('../src/styles/tokens.css', import.meta.url), 'utf8');
+const blocks = [...css.matchAll(/:root\[data-theme='(light|dark)'\]\s*\{([^}]+)\}/g)];
+const luminance = hex => {
+  const c = hex.match(/[a-f\d]{2}/gi).map(v => parseInt(v, 16) / 255).map(v => v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4);
+  return c[0] * .2126 + c[1] * .7152 + c[2] * .0722;
 };
 let failed = false;
 for (const [, theme, body] of blocks) {
-  const palette = Object.fromEntries([...body.matchAll(/--([\w-]+):\s*(#[a-f\d]{6})/gi)]
-    .map(([, name, value]) => [name, value]));
-  const pairs = [];
-  for (const background of ['bg', 'surface', 'surface-2', 'surface-3', 'news-bg', 'social-bg', 'embed-bg']) {
-    for (const foreground of ['text', 'muted', 'soft-text', 'green']) pairs.push([foreground, background]);
-  }
-  pairs.push(['hero-note', 'bg'], ['wiki-promo-text', 'wiki-promo-bg'],
-    ['wiki-promo-muted', 'wiki-promo-bg'], ['wiki-promo-accent', 'wiki-promo-bg'],
-    ['footer-text', 'footer-bg'], ['footer-muted', 'footer-bg'], ['footer-bottom', 'footer-bg'],
-    [theme === 'light' ? '#ffffff' : '#052713', 'green']);
-  let minimum = Infinity;
-  for (const [foreground, background] of pairs) {
-    const a = luminance(palette[foreground] ?? foreground);
-    const b = luminance(palette[background]);
-    const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-    minimum = Math.min(minimum, ratio);
-    if (ratio < 4.5) {
-      failed = true;
-      console.error(`${theme}: ${foreground} / ${background}: ${ratio.toFixed(2)}:1 FAIL`);
-    }
-  }
-  console.log(`${theme}: ${pairs.length} text pairs; minimum ${minimum.toFixed(2)}:1`);
-}
-if (blocks.length !== 2) throw new Error('Expected both theme palettes');
-const wiki = readFileSync(new URL('../src/styles/wiki.css', import.meta.url), 'utf8');
-const wikiBlocks = [...wiki.matchAll(/:root(?:\[data-theme='dark'\])?\s*\{([^}]+)\}/g)];
-for (const [index, match] of wikiBlocks.entries()) {
-  const palette = Object.fromEntries([...match[1].matchAll(/--sl-color-([\w-]+):\s*(#[a-f\d]{6})/gi)]
-    .map(([, name, value]) => [name, value]));
-  const pairs = [['accent-high', 'accent-low']];
-  for (const background of ['black', 'gray-6', 'accent-low']) {
-    for (const foreground of ['white', 'gray-2', 'gray-3']) pairs.push([foreground, background]);
+  const colors = Object.fromEntries([...body.matchAll(/--([\w-]+):\s*(#[a-f\d]{6})/gi)].map(([, k, v]) => [k,v]));
+  const pairs = [['accent-text', 'accent', 4.5]];
+  for (const bg of ['bg', 'surface', 'surface-2', 'accent-low']) {
+    for (const fg of ['text', 'muted', 'accent']) pairs.push([fg, bg, 4.5]);
+    for (const fg of ['control-line', 'focus']) pairs.push([fg, bg, 3]);
   }
   let minimum = Infinity;
-  for (const [foreground, background] of pairs) {
-    const a = luminance(palette[foreground]);
-    const b = luminance(palette[background]);
-    const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-    minimum = Math.min(minimum, ratio);
-    if (ratio < 4.5) {
-      failed = true;
-      console.error(`wiki ${index ? 'dark' : 'light'}: ${foreground} / ${background}: ${ratio.toFixed(2)}:1 FAIL`);
-    }
+  for (const [fg, bg, threshold] of pairs) {
+    const a = luminance(colors[fg]), b = luminance(colors[bg]);
+    const ratio = (Math.max(a,b) + .05) / (Math.min(a,b) + .05);
+    if (threshold === 4.5) minimum = Math.min(minimum, ratio);
+    if (ratio < threshold) { failed = true; console.error(`${theme}: ${fg}/${bg} ${ratio.toFixed(2)}:1 < ${threshold}`); }
   }
-  console.log(`wiki ${index ? 'dark' : 'light'}: ${pairs.length} text pairs; minimum ${minimum.toFixed(2)}:1`);
+  console.log(`${theme}: ${pairs.length} text/UI palette pairs; minimum text ratio ${minimum.toFixed(2)}:1`);
 }
-if (wikiBlocks.length !== 2) throw new Error('Expected both Wiki palettes');
+if (blocks.length !== 2) throw new Error('Expected two theme palettes');
 if (failed) process.exitCode = 1;
+console.log('Static palette checks do not replace browser and assistive-technology checks.');

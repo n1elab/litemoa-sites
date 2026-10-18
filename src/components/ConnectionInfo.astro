@@ -1,0 +1,33 @@
+---
+import { site } from '../data/site';
+interface Props { compact?: boolean; }
+const { compact = false } = Astro.props;
+const values = compact
+  ? [{ label: 'サーバーアドレス', value: site.address }]
+  : [{ label: 'サーバーアドレス', value: site.address }, { label: '統合版ポート', value: site.bedrockPort }, { label: 'フレンド参加用ゲーマータグ', value: site.gamertag }];
+---
+<div class:list={['connection-info', { compact }]}>
+  {values.map(({ label, value }) => <div class="connection-value">
+    <span>{label}</span>
+    <code tabindex="0">{value}</code>
+    <button type="button" data-copy-value={value} data-copy-name={label} hidden aria-label={`${label}をコピー`}>コピー</button>
+  </div>)}
+  <p class="copy-status" role="status" aria-live="polite" data-copy-status></p>
+  <p class="copy-help">値を選択して手動でもコピーできます。</p>
+</div>
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy-value]').forEach((button) => {
+    button.hidden = false;
+    button.addEventListener('click', async () => {
+      const value = button.dataset.copyValue || '';
+      const status = button.closest('.connection-info')?.querySelector('[data-copy-status]');
+      if (status) status.textContent = '';
+      try {
+        await navigator.clipboard.writeText(value);
+        if (status) status.textContent = `${button.dataset.copyName}をコピーしました。`;
+      } catch {
+        if (status) status.textContent = 'コピーできませんでした。値を選択してコピーしてください。';
+      }
+    });
+  });
+</script>

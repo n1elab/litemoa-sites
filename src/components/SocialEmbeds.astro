@@ -1,56 +1,38 @@
-<section class="section social-section" id="community">
-  <div class="shell section-heading compact"><h2>Discord / X</h2></div>
-
-  <div class="shell social-embed-grid">
-    <article class="social-embed-card">
-      <div class="social-embed-head">
-        <div>
-          <span>DISCORD</span>
-          <h3>Litemoa Server Discord</h3>
-        </div>
-        <a href="https://discord.gg/UyKV4BDxBR" target="_blank" rel="noopener noreferrer">開く ↗</a>
-      </div>
-
-      <div class="discord-frame-wrap">
-        <iframe
-          src="https://discord.com/widget?id=1320711247301316628&theme=dark"
-          width="350"
-          height="500"
-          loading="lazy"
-          title="Litemoa Server Discord"
-          allowtransparency="true"
-          frameborder="0"
-          sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
-        ></iframe>
-      </div>
-    </article>
-
-    <article class="social-embed-card">
-      <div class="social-embed-head">
-        <div>
-          <span>X / TWITTER</span>
-          <h3>@litemoa</h3>
-        </div>
-        <a href="https://x.com/litemoa" target="_blank" rel="noopener noreferrer">開く ↗</a>
-      </div>
-
-      <div class="x-frame-wrap">
-        <a
-          class="twitter-timeline"
-          data-height="500"
-          data-theme="dark"
-          data-chrome="noheader nofooter"
-          href="https://x.com/litemoa?ref_src=twsrc%5Etfw"
-        >Posts by litemoa</a>
-      </div>
-    </article>
+---
+import { site } from '../data/site';
+---
+<section class="section community-section" id="community" aria-labelledby="community-title">
+  <div class="shell community-layout">
+    <div><h2 id="community-title">ゲームの外でも。</h2><p>Discordで話す。Xで近況を見る。</p></div>
+    <div>
+      <div class="community-links"><a href={site.discord}>Discordに参加 →</a><a href={site.x}>X · @litemoa →</a></div>
+      <details class="external-panel" data-community-panel>
+        <summary>Discord・Xの埋め込みを表示</summary>
+        <p>開くとDiscordとXに接続します。表示されない場合は上のリンクから確認できます。</p>
+        <div class="social-embed-grid"><div data-discord-content></div><div data-x-content></div></div>
+        <noscript><p>埋め込みの読み込みにはJavaScriptが必要です。</p></noscript>
+      </details>
+    </div>
   </div>
-
-  <div class="shell embed-note">
-    <p>
-      ※ 上の埋め込みを表示すると、Discord・Xの外部コンテンツが読み込まれます。
-    </p>
-  </div>
-
-  <script is:inline async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
 </section>
+<script>
+  document.querySelectorAll<HTMLDetailsElement>('[data-community-panel]').forEach((panel) => {
+    panel.addEventListener('toggle', () => {
+      if (!panel.open || panel.dataset.loaded) return;
+      panel.dataset.loaded = 'true';
+      const theme = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+      const discord = document.createElement('iframe');
+      discord.src = `https://discord.com/widget?id=1320711247301316628&theme=${theme}`;
+      discord.title = 'Litemoa Server Discord'; discord.width = '350'; discord.height = '500';
+      discord.setAttribute('sandbox', 'allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts');
+      panel.querySelector('[data-discord-content]')?.append(discord);
+      const timeline = document.createElement('a');
+      timeline.className = 'twitter-timeline'; timeline.dataset.height = '500'; timeline.dataset.theme = theme;
+      timeline.href = 'https://x.com/litemoa'; timeline.textContent = '@litemoa の投稿をXで見る';
+      panel.querySelector('[data-x-content]')?.append(timeline);
+      if (!document.querySelector('script[data-x-widget]')) {
+        const script = document.createElement('script'); script.src = 'https://platform.x.com/widgets.js'; script.async = true; script.dataset.xWidget = ''; document.body.append(script);
+      }
+    });
+  });
+</script>

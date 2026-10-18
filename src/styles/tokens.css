@@ -1,0 +1,32 @@
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #faf9f5;
+  --surface: #ffffff;
+  --surface-2: #eeeee7;
+  --text: #232923;
+  --muted: #526052;
+  --accent: #30613c;
+  --accent-text: #ffffff;
+  --accent-low: #e3eddf;
+  --line: #d1d5cb;
+  --control-line: #64705f;
+  --focus: #30613c;
+  --radius: .25rem;
+  --shell: 72rem;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', Meiryo, sans-serif;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #151816;
+  --surface: #1b201d;
+  --surface-2: #252c27;
+  --text: #f2f3ed;
+  --muted: #b2bbb4;
+  --accent: #a5c7a1;
+  --accent-text: #172518;
+  --accent-low: #28392b;
+  --line: #3c473e;
+  --control-line: #889b89;
+  --focus: #a5c7a1;
+}

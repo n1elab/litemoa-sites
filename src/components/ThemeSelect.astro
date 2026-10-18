@@ -1,0 +1,35 @@
+<label class="theme-control">
+  <span class="sr-only">配色</span>
+  <select data-theme-select disabled aria-label="配色">
+    <option value="auto">自動</option>
+    <option value="light">ライト</option>
+    <option value="dark">ダーク</option>
+  </select>
+</label>
+<script>
+  const system = matchMedia('(prefers-color-scheme: light)');
+  let preference = document.documentElement.dataset.themePreference || 'auto';
+  function apply() {
+    const theme = preference === 'auto' ? (system.matches ? 'light' : 'dark') : preference;
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.dataset.themePreference = preference;
+    document.querySelectorAll<HTMLSelectElement>('[data-theme-select]').forEach((picker) => {
+      picker.value = preference;
+      picker.disabled = false;
+    });
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#151816' : '#faf9f5');
+  }
+  document.querySelectorAll<HTMLSelectElement>('[data-theme-select]').forEach((picker) => {
+    picker.addEventListener('change', () => {
+      preference = picker.value;
+      apply();
+      try {
+        localStorage.setItem('starlight-theme', preference === 'auto' ? '' : preference);
+        // Keep the previous official-site preference from being restored after selecting auto.
+        localStorage.removeItem('litemoa-theme');
+      } catch { /* Keep the in-page selection even when storage is blocked. */ }
+    });
+  });
+  system.addEventListener('change', () => { if (preference === 'auto') apply(); });
+  apply();
+</script>
