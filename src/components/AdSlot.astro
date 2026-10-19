@@ -1,22 +1,9 @@
-<aside class="external-panel ad-panel" data-ad-panel aria-label="広告">
+<aside class="external-panel ad-panel" aria-label="広告">
   <p>広告</p>
-  <div data-ad-content></div>
+  <div class="ad-content">
+    <!-- admax -->
+    <script is:inline src="https://adm.shinobi.jp/o/3c0f3055576e375f9155694a93a52057"></script>
+    <!-- admax -->
+  </div>
   <noscript><p>広告の読み込みにはJavaScriptが必要です。</p></noscript>
 </aside>
-<script>
-  document.querySelectorAll<HTMLElement>('[data-ad-panel]').forEach((panel) => {
-      const content = panel.querySelector('[data-ad-content]');
-      if (!content || content.hasChildNodes()) return;
-      const frame = document.createElement('iframe');
-      frame.title = '広告（忍者AdMax）';
-      frame.width = '300';
-      frame.height = '270';
-      frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
-      frame.referrerPolicy = 'strict-origin-when-cross-origin';
-      // A data document has its own opaque origin. Internal ad frames can share
-      // that origin without receiving access to this site's document or storage.
-      const html = '<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><script src="https://adm.shinobi.jp/o/3c0f3055576e375f9155694a93a52057"><' + '/script></body></html>';
-      frame.src = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
-      content.append(frame);
-  });
-</script>

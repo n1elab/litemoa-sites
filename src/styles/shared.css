@@ -27,7 +27,7 @@ html:not([data-enhanced]) .theme-control { display: none; }
 .external-panel p { margin: .25rem 0 1rem; }
 .external-panel iframe { display: block; width: 100%; max-width: 100%; border: 0; }
 .ad-panel { max-width: 25rem; }
-.ad-panel iframe { max-width: 300px; height: 270px; }
+.ad-content { max-width: 100%; overflow-x: auto; }
 .social-embed-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
 .social-embed-grid > div { min-width: 0; }
 .site-footer { border-top: 1px solid var(--line); margin-top: 3rem; padding: 2.5rem 0 1.5rem; background: var(--surface-2); color: var(--muted); }
